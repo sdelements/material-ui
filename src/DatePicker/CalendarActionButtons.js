@@ -11,8 +11,13 @@ class CalendarActionButton extends Component {
     wordings: PropTypes.object,
   };
 
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
+
   render() {
     const {cancelLabel, okLabel, wordings} = this.props;
+    const {actionHoverBackground, actionHoverText} = this.context.muiTheme.datePicker;
 
     const styles = {
       root: {
@@ -37,7 +42,6 @@ class CalendarActionButton extends Component {
         <FlatButton
           label={wordings ? wordings.cancel : cancelLabel}
           onTouchTap={this.props.onTouchTapCancel}
-          primary={true}
           style={styles.flatButtons}
         />
         {!this.props.autoOk &&
@@ -45,7 +49,8 @@ class CalendarActionButton extends Component {
             disabled={this.refs.calendar !== undefined && this.refs.calendar.isSelectedDateDisabled()}
             label={wordings ? wordings.ok : okLabel}
             onTouchTap={this.props.onTouchTapOk}
-            primary={true}
+            hoverColor={actionHoverBackground}
+            hoverTextColor={actionHoverText}
             style={styles.flatButtons}
           />
         }
