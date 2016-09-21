@@ -159,6 +159,7 @@ class FlatButton extends Component {
       children,
       disabled,
       hoverColor,
+      hoverTextColor,
       backgroundColor,
       icon,
       label,
@@ -190,10 +191,6 @@ class FlatButton extends Component {
         textTransform = buttonTextTransform || 'uppercase',
       },
     } = this.context.muiTheme;
-    const defaultTextColor = disabled ? disabledTextColor :
-      primary ? primaryTextColor :
-      secondary ? secondaryTextColor :
-      textColor;
 
     const defaultHoverColor = fade(buttonFilterColor, 0.2);
     const defaultRippleColor = buttonFilterColor;
@@ -201,6 +198,13 @@ class FlatButton extends Component {
     const buttonRippleColor = rippleColor || defaultRippleColor;
     const buttonBackgroundColor = backgroundColor || buttonColor;
     const hovered = (this.state.hovered || this.state.isKeyboardFocused) && !disabled;
+
+    const defaultTextColor = disabled ? disabledTextColor :
+    primary ? primaryTextColor :
+    secondary ? secondaryTextColor :
+    !hovered ? textColor :
+    hoverTextColor ? hoverTextColor :
+    textColor;
 
     const mergedRootStyles = Object.assign({}, {
       height: buttonHeight,

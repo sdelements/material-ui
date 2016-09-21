@@ -92,6 +92,8 @@ export default function getMuiTheme(muiTheme, ...more) {
       selectColor: palette.primary2Color,
       selectTextColor: palette.alternateTextColor,
       calendarYearBackgroundColor: white,
+      actionHoverBackground: '#FCC107',
+      actionHoverText: 'rgb(255,255,255)',
     },
     dialog: {
       titleFontSize: 22,
@@ -107,8 +109,8 @@ export default function getMuiTheme(muiTheme, ...more) {
     flatButton: {
       color: transparent,
       buttonFilterColor: '#999999',
-      disabledTextColor: fade(palette.textColor, 0.3),
-      textColor: palette.textColor,
+      disabledTextColor: fade(palette.textColor, 0.26),
+      textColor: fade(palette.textColor, 0.54),
       primaryTextColor: palette.primary1Color,
       secondaryTextColor: palette.accent1Color,
       fontSize: typography.fontStyleButtonFontSize,
