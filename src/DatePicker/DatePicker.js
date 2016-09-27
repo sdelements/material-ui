@@ -20,9 +20,17 @@ class DatePicker extends Component {
      */
     autoOk: PropTypes.bool,
     /**
+     * The css class name of the 'Cancel' button.
+     */
+    cancelClassName: PropTypes.string,
+    /**
      * Override the default text of the 'Cancel' button.
      */
     cancelLabel: PropTypes.node,
+    /**
+     * Override the inline-styles of the 'Cancel' button.
+     */
+    cancelStyle: PropTypes.object,
     /**
      * The css class name of the root element.
      */
@@ -82,9 +90,17 @@ class DatePicker extends Component {
      */
     mode: PropTypes.oneOf(['portrait', 'landscape']),
     /**
+     * The css class name of the 'OK' button
+     */
+    okClassName: PropTypes.string,
+    /**
      * Override the default text of the 'OK' button.
      */
     okLabel: PropTypes.node,
+    /**
+     * Override the inline-styles of the 'OK' button.
+     */
+    okStyle: PropTypes.object,
     /**
      * Callback function that is fired when the date value changes.
      *
@@ -260,7 +276,9 @@ class DatePicker extends Component {
     const {
       DateTimeFormat,
       autoOk,
+      cancelClassName,
       cancelLabel,
+      cancelStyle,
       className,
       container,
       defaultDate, // eslint-disable-line no-unused-vars
@@ -270,7 +288,9 @@ class DatePicker extends Component {
       maxDate,
       minDate,
       mode,
+      okClassName,
       okLabel,
+      okStyle,
       onDismiss,
       onFocus, // eslint-disable-line no-unused-vars
       onShow,
@@ -298,7 +318,9 @@ class DatePicker extends Component {
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
+          cancelClassName={cancelClassName}
           cancelLabel={cancelLabel}
+          cancelStyle={cancelStyle}
           container={container}
           disableYearSelection={disableYearSelection}
           firstDayOfWeek={firstDayOfWeek}
@@ -307,7 +329,9 @@ class DatePicker extends Component {
           maxDate={maxDate}
           minDate={minDate}
           mode={mode}
+          okClassName={okClassName}
           okLabel={okLabel}
+          okStyle={okStyle}
           onAccept={this.handleAccept}
           onShow={onShow}
           onDismiss={onDismiss}
