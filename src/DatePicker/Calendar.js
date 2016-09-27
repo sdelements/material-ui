@@ -315,11 +315,15 @@ class Calendar extends Component {
     const weekTitleDayStyle = prepareStyles(styles.weekTitleDay);
 
     const {
+      cancelClassName,
       cancelLabel,
+      cancelStyle,
       DateTimeFormat,
       firstDayOfWeek,
       locale,
+      okClassName,
       okLabel,
+      okStyle,
       onClickCancel, // eslint-disable-line no-unused-vars
       onClickOk, // eslint-disable-line no-unused-vars
       utils,
@@ -387,8 +391,12 @@ class Calendar extends Component {
           {okLabel &&
             <CalendarActionButtons
               autoOk={this.props.autoOk}
+              cancelClassName={cancelClassName}
               cancelLabel={cancelLabel}
+              cancelStyle={cancelStyle}
+              okClassName={okClassName}
               okLabel={okLabel}
+              okStyle={okStyle}
               onClickCancel={onClickCancel}
               onClickOk={onClickOk}
             />

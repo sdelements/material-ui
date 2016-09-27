@@ -11,8 +11,21 @@ class CalendarActionButton extends Component {
     onClickOk: PropTypes.func,
   };
 
+  static defaultProps = {
+    okStyle: {},
+    cancelStyle: {},
+  };
+
   render() {
-    const {cancelLabel, okLabel} = this.props;
+    const {
+      cancelClassName,
+      cancelLabel,
+      cancelStyle,
+      okClassName,
+      okLabel,
+      okStyle,
+      wordings
+    } = this.props;
 
     const styles = {
       root: {
@@ -35,18 +48,20 @@ class CalendarActionButton extends Component {
     return (
       <div style={styles.root} >
         <FlatButton
+          className={cancelClassName}
           label={cancelLabel}
           onClick={this.props.onClickCancel}
           primary={true}
-          style={styles.flatButtons}
+          style={{...styles.flatButtons, ...cancelStyle}}
         />
         {!this.props.autoOk &&
           <FlatButton
+            className={okClassName}
             disabled={this.refs.calendar !== undefined && this.refs.calendar.isSelectedDateDisabled()}
             label={okLabel}
             onClick={this.props.onClickOk}
             primary={true}
-            style={styles.flatButtons}
+            style={{...styles.flatButtons, ...okStyle}}
           />
         }
       </div>
