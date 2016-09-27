@@ -315,14 +315,28 @@ class Calendar extends Component {
     const weekTitleDayStyle = prepareStyles(styles.weekTitleDay);
 
     const {
+<<<<<<< 91a3ee870af5d61795f9c19af64bba7635fefe5f
+=======
+      minDate,
+      maxDate,
+      cancelClassName,
+>>>>>>> Allow DatePicker buttons to be overriden
       cancelLabel,
+      cancelStyle,
       DateTimeFormat,
       firstDayOfWeek,
       locale,
+      okClassName,
       okLabel,
+<<<<<<< 91a3ee870af5d61795f9c19af64bba7635fefe5f
       onClickCancel, // eslint-disable-line no-unused-vars
       onClickOk, // eslint-disable-line no-unused-vars
       utils,
+=======
+      okStyle,
+      onTouchTapCancel, // eslint-disable-line no-unused-vars
+      onTouchTapOk, // eslint-disable-line no-unused-vars
+>>>>>>> Allow DatePicker buttons to be overriden
     } = this.props;
 
     return (
@@ -387,10 +401,16 @@ class Calendar extends Component {
           {okLabel &&
             <CalendarActionButtons
               autoOk={this.props.autoOk}
+              cancelClassName={cancelClassName}
               cancelLabel={cancelLabel}
+              cancelStyle={cancelStyle}
+              okClassName={okClassName}
               okLabel={okLabel}
               onClickCancel={onClickCancel}
               onClickOk={onClickOk}
+              okStyle={okStyle}
+              onTouchTapCancel={onTouchTapCancel}
+              onTouchTapOk={onTouchTapOk}
             />
           }
         </div>

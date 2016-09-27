@@ -108,7 +108,9 @@ class DatePickerDialog extends Component {
     const {
       DateTimeFormat,
       autoOk,
+      cancelClassName,
       cancelLabel,
+      cancelStyle,
       container,
       containerStyle,
       disableYearSelection,
@@ -118,7 +120,9 @@ class DatePickerDialog extends Component {
       maxDate,
       minDate,
       mode,
+      okClassName,
       okLabel,
+      okStyle,
       onAccept, // eslint-disable-line no-unused-vars
       onDismiss, // eslint-disable-line no-unused-vars
       onShow, // eslint-disable-line no-unused-vars
@@ -166,7 +170,10 @@ class DatePickerDialog extends Component {
           <Calendar
             autoOk={autoOk}
             DateTimeFormat={DateTimeFormat}
+            cancelClassName={cancelClassName}
             cancelLabel={cancelLabel}
+            cancelStyle={cancelStyle}
+            DateTimeFormat={DateTimeFormat}
             disableYearSelection={disableYearSelection}
             firstDayOfWeek={firstDayOfWeek}
             initialDate={initialDate}
@@ -179,8 +186,12 @@ class DatePickerDialog extends Component {
             ref="calendar"
             onClickCancel={this.handleClickCancel}
             onClickOk={this.handleClickOk}
-            okLabel={okLabel}
             openToYearSelection={openToYearSelection}
+            onTouchTapCancel={this.handleTouchTapCancel}
+            onTouchTapOk={this.handleTouchTapOk}
+            okClassName={okClassName}
+            okLabel={okLabel}
+            okStyle={okStyle}
             shouldDisableDate={shouldDisableDate}
             hideCalendarDate={hideCalendarDate}
             utils={utils}
