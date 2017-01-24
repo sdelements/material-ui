@@ -14,8 +14,6 @@ function getStyles(props, context, state) {
     iconStyle,
     rippleStyle,
     labelStyle,
-    toggled,
-    showColorWhenDisabled,
   } = props;
 
   const {
@@ -64,11 +62,11 @@ function getStyles(props, context, state) {
       left: '100%',
     },
     trackWhenDisabled: {
-      backgroundColor: (toggled && showColorWhenDisabled) ? toggle.trackOnColor : toggle.trackDisabledColor,
+      backgroundColor: toggle.trackDisabledColor,
       cursor: 'not-allowed',
     },
     thumbWhenDisabled: {
-      backgroundColor: (toggled && showColorWhenDisabled) ? toggle.thumbOnColor : toggle.thumbDisabledColor,
+      backgroundColor: toggle.thumbDisabledColor,
       cursor: 'not-allowed',
     },
     label: {
