@@ -11,11 +11,11 @@ function getStyles(props, context, state) {
 
   return {
     root: {
+      position: 'fixed',
+      zIndex: muiTheme.zIndex.popover,
       opacity: open ? 1 : 0,
       transform: open ? 'scaleY(1)' : 'scaleY(0)',
       transformOrigin: `${horizontal} ${targetOrigin.vertical}`,
-      position: 'fixed',
-      zIndex: muiTheme.zIndex.popover,
       transition: transitions.easeOut('450ms', ['transform', 'opacity']),
       maxHeight: '100%',
     },
@@ -31,7 +31,7 @@ class PopoverAnimationVertical extends Component {
      * Override the inline-styles of the root element.
      */
     style: PropTypes.object,
-    targetOrigin: propTypes.origin,
+    targetOrigin: propTypes.origin.isRequired,
     zDepth: propTypes.zDepth,
   };
 

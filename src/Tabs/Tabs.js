@@ -17,6 +17,7 @@ function getStyles(props, context) {
       width: '100%',
       backgroundColor: tabs.backgroundColor,
       whiteSpace: 'nowrap',
+      display: 'flex',
     },
   };
 }
@@ -43,7 +44,7 @@ class Tabs extends Component {
      * Specify initial visible tab index.
      * If `initialSelectedIndex` is set but larger than the total amount of specified tabs,
      * `initialSelectedIndex` will revert back to default.
-     * If `initialSlectedIndex` is set to any negative value, no tab will be selected intially.
+     * If `initialSelectedIndex` is set to any negative value, no tab will be selected intially.
      */
     initialSelectedIndex: PropTypes.number,
     /**
@@ -183,7 +184,7 @@ class Tabs extends Component {
       tabItemContainerStyle,
       tabTemplate,
       tabTemplateStyle,
-      ...other,
+      ...other
     } = this.props;
 
     const {prepareStyles} = this.context.muiTheme;
@@ -195,11 +196,11 @@ class Tabs extends Component {
 
     const tabs = this.getTabs().map((tab, index) => {
       warning(tab.type && tab.type.muiName === 'Tab',
-        `Tabs only accepts Tab Components as children.
+        `Material-UI: Tabs only accepts Tab Components as children.
         Found ${tab.type.muiName || tab.type} as child number ${index + 1} of Tabs`);
 
       warning(!tabValue || tab.props.value !== undefined,
-        `Tabs value prop has been passed, but Tab ${index}
+        `Material-UI: Tabs value prop has been passed, but Tab ${index}
         does not have a value prop. Needs value if Tabs is going
         to be a controlled component.`);
 
@@ -231,10 +232,7 @@ class Tabs extends Component {
       tabItemContainerStyle.width : '100%';
 
     return (
-      <div
-        style={prepareStyles(Object.assign({}, style))}
-        {...other}
-      >
+      <div style={prepareStyles(Object.assign({}, style))} {...other}>
         <div style={prepareStyles(Object.assign(styles.tabItemContainer, tabItemContainerStyle))}>
           {tabs}
         </div>

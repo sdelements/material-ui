@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import warning from 'warning';
 
 function getStyles(props, context) {
   const {
@@ -9,7 +10,6 @@ function getStyles(props, context) {
   return {
     root: {
       backgroundColor: table.backgroundColor,
-      padding: `0 ${baseTheme.spacing.desktopGutter}px`,
       width: '100%',
       borderCollapse: 'collapse',
       borderSpacing: 0,
@@ -255,6 +255,10 @@ class Table extends Component {
         tHead = this.createTableHeader(child);
       } else if (muiName === 'TableFooter') {
         tFoot = this.createTableFooter(child);
+      } else {
+        warning(false,
+          `Material-UI: Children of the Table component must be TableBody or TableHeader or TableFooter.
+           Nothing is rendered.`);
       }
     });
 

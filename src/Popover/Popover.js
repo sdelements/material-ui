@@ -6,6 +6,7 @@ import propTypes from '../utils/propTypes';
 import Paper from '../Paper';
 import throttle from 'lodash.throttle';
 import PopoverAnimationDefault from './PopoverAnimationDefault';
+import {isIOS, getOffsetTop} from '../utils/iOSHelpers';
 
 const styles = {
   root: {
@@ -24,8 +25,8 @@ class Popover extends Component {
      * This is the point on the anchor where the popover's
      * `targetOrigin` will attach to.
      * Options:
-     * vertical: [top, middle, bottom];
-     * horizontal: [left, center, right].
+     * vertical: [top, center, bottom]
+     * horizontal: [left, middle, right].
      */
     anchorOrigin: propTypes.origin,
     /**
@@ -74,8 +75,8 @@ class Popover extends Component {
      * This is the point on the popover which will attach to
      * the anchor's origin.
      * Options:
-     * vertical: [top, middle, bottom];
-     * horizontal: [left, center, right].
+     * vertical: [top, center, bottom]
+     * horizontal: [left, middle, right].
      */
     targetOrigin: propTypes.origin,
     /**
@@ -131,29 +132,33 @@ class Popover extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.open !== this.state.open) {
-      if (nextProps.open) {
-        this.anchorEl = nextProps.anchorEl || this.props.anchorEl;
-        this.setState({
-          open: true,
-          closing: false,
-        });
-      } else {
-        if (nextProps.animated) {
-          if (this.timeout !== null) return;
-          this.setState({closing: true});
-          this.timeout = setTimeout(() => {
-            this.setState({
-              open: false,
-            }, () => {
-              this.timeout = null;
-            });
-          }, 500);
-        } else {
+    if (nextProps.open === this.props.open) {
+      return;
+    }
+
+    if (nextProps.open) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+      this.anchorEl = nextProps.anchorEl || this.props.anchorEl;
+      this.setState({
+        open: true,
+        closing: false,
+      });
+    } else {
+      if (nextProps.animated) {
+        if (this.timeout !== null) return;
+        this.setState({closing: true});
+        this.timeout = setTimeout(() => {
           this.setState({
             open: false,
+          }, () => {
+            this.timeout = null;
           });
-        }
+        }, 500);
+      } else {
+        this.setState({
+          open: false,
+        });
       }
     }
   }
@@ -176,28 +181,48 @@ class Popover extends Component {
 
   renderLayer = () => {
     const {
-      animated, // eslint-disable-line no-unused-vars
+      animated,
       animation,
+      anchorEl, // eslint-disable-line no-unused-vars
+      anchorOrigin, // eslint-disable-line no-unused-vars
+      autoCloseWhenOffScreen, // eslint-disable-line no-unused-vars
+      canAutoPosition, // eslint-disable-line no-unused-vars
       children,
+      onRequestClose, // eslint-disable-line no-unused-vars
       style,
-      ...other,
+      targetOrigin,
+      useLayerForClickAway, // eslint-disable-line no-unused-vars
+      ...other
     } = this.props;
 
-    let Animation = animation || PopoverAnimationDefault;
     let styleRoot = style;
 
-    if (!Animation) {
-      Animation = Paper;
+    if (!animated) {
       styleRoot = {
         position: 'fixed',
+        zIndex: this.context.muiTheme.zIndex.popover,
       };
+
       if (!this.state.open) {
         return null;
       }
+
+      return (
+        <Paper style={Object.assign(styleRoot, style)} {...other}>
+          {children}
+        </Paper>
+      );
     }
 
+    const Animation = animation || PopoverAnimationDefault;
+
     return (
-      <Animation {...other} style={styleRoot} open={this.state.open && !this.state.closing}>
+      <Animation
+        targetOrigin={targetOrigin}
+        style={styleRoot}
+        {...other}
+        open={this.state.open && !this.state.closing}
+      >
         {children}
       </Animation>
     );
@@ -209,7 +234,8 @@ class Popover extends Component {
     }
   }
 
-  componentClickAway = () => {
+  componentClickAway = (event) => {
+    event.preventDefault();
     this.requestClose('clickAway');
   };
 
@@ -227,7 +253,14 @@ class Popover extends Component {
     };
 
     a.right = rect.right || a.left + a.width;
-    a.bottom = rect.bottom || a.top + a.height;
+
+    // The fixed positioning isn't respected on iOS when an input is focused.
+    // We need to compute the position from the top of the page and not the viewport.
+    if (isIOS() && document.activeElement.tagName === 'INPUT') {
+      a.bottom = getOffsetTop(el) + a.height;
+    } else {
+      a.bottom = rect.bottom || a.top + a.height;
+    }
     a.middle = a.left + ((a.right - a.left) / 2);
     a.center = a.top + ((a.bottom - a.top) / 2);
 
@@ -341,24 +374,28 @@ class Popover extends Component {
 
     if (targetPosition.top < 0 || targetPosition.top + target.bottom > window.innerHeight) {
       let newTop = anchor[anchorPos.vertical] - target[positions.y[0]];
-      if (newTop + target.bottom <= window.innerHeight)
+      if (newTop + target.bottom <= window.innerHeight) {
         targetPosition.top = Math.max(0, newTop);
-      else {
+      } else {
         newTop = anchor[anchorPos.vertical] - target[positions.y[1]];
-        if (newTop + target.bottom <= window.innerHeight)
+        if (newTop + target.bottom <= window.innerHeight) {
           targetPosition.top = Math.max(0, newTop);
+        }
       }
     }
+
     if (targetPosition.left < 0 || targetPosition.left + target.right > window.innerWidth) {
       let newLeft = anchor[anchorPos.horizontal] - target[positions.x[0]];
-      if (newLeft + target.right <= window.innerWidth)
+      if (newLeft + target.right <= window.innerWidth) {
         targetPosition.left = Math.max(0, newLeft);
-      else {
+      } else {
         newLeft = anchor[anchorPos.horizontal] - target[positions.x[1]];
-        if (newLeft + target.right <= window.innerWidth)
+        if (newLeft + target.right <= window.innerWidth) {
           targetPosition.left = Math.max(0, newLeft);
+        }
       }
     }
+
     return targetPosition;
   }
 

@@ -10,6 +10,7 @@ function getStyles(props, context) {
       height: tableRowColumn.height,
       textAlign: 'left',
       fontSize: 13,
+      overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
     },
@@ -101,7 +102,7 @@ class TableRowColumn extends Component {
       onHover, // eslint-disable-line no-unused-vars
       onHoverExit, // eslint-disable-line no-unused-vars
       style,
-      ...other,
+      ...other
     } = this.props;
 
     const {prepareStyles} = this.context.muiTheme;
