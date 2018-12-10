@@ -173,7 +173,6 @@ class DatePickerDialog extends Component {
             cancelClassName={cancelClassName}
             cancelLabel={cancelLabel}
             cancelStyle={cancelStyle}
-            DateTimeFormat={DateTimeFormat}
             disableYearSelection={disableYearSelection}
             firstDayOfWeek={firstDayOfWeek}
             initialDate={initialDate}

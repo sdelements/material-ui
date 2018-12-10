@@ -44,8 +44,8 @@
     "postpublish": "npm run build && cd build && npm publish"
   },
   "peerDependencies": {
-    "react": "^15.4.0 || ^16.0.0",
-    "react-dom": "^15.4.0 || ^16.0.0"
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
@@ -53,7 +53,7 @@
     "keycode": "^2.1.8",
     "lodash.merge": "^4.6.0",
     "lodash.throttle": "^4.1.1",
-    "prop-types": "^15.5.7",
+    "prop-types": "^15.6.2",
     "react-event-listener": "^0.6.2",
     "react-transition-group": "^1.2.1",
     "recompose": "^0.26.0",
@@ -69,7 +69,7 @@
     "babel-plugin-transform-dev-warning": "^0.1.0",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
     "babel-plugin-transform-react-inline-elements": "^6.22.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.3.0",
     "babel-plugin-transform-replace-object-assign": "^0.2.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.23.0",
