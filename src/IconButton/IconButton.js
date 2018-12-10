@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import transitions from '../styles/transitions';
 import propTypes from '../utils/propTypes';
 import EnhancedButton from '../internal/EnhancedButton';
@@ -25,7 +26,7 @@ function getStyles(props, context) {
     disabled: {
       color: baseTheme.palette.disabledColor,
       fill: baseTheme.palette.disabledColor,
-      cursor: 'not-allowed',
+      cursor: 'default',
     },
   };
 }
@@ -69,6 +70,12 @@ class IconButton extends Component {
     iconStyle: PropTypes.object,
     /** @ignore */
     onBlur: PropTypes.func,
+    /**
+     * Callback function fired when the button is clicked.
+     *
+     * @param {object} event Click event targeting the button.
+     */
+    onClick: PropTypes.func,
     /** @ignore */
     onFocus: PropTypes.func,
     /**

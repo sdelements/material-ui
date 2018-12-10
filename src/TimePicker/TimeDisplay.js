@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 class TimeDisplay extends Component {
   static propTypes = {
@@ -112,7 +113,7 @@ class TimeDisplay extends Component {
         <div
           key="pm"
           style={prepareStyles(Object.assign({}, styles.clickable, affix === 'pm' ? {} : styles.inactive))}
-          onTouchTap={() => onSelectAffix('pm')}
+          onClick={() => onSelectAffix('pm')}
         >
           {'PM'}
         </div>,
@@ -120,7 +121,7 @@ class TimeDisplay extends Component {
           key="am"
           style={prepareStyles(Object.assign({},
             styles.affixTop, styles.clickable, affix === 'am' ? {} : styles.inactive))}
-          onTouchTap={() => onSelectAffix('am')}
+          onClick={() => onSelectAffix('am')}
         >
           {'AM'}
         </div>,
@@ -134,7 +135,7 @@ class TimeDisplay extends Component {
           <div style={prepareStyles(styles.time)}>
             <span
               style={prepareStyles(Object.assign({}, styles.clickable, mode === 'hour' ? {} : styles.inactive))}
-              onTouchTap={onSelectHour}
+              onClick={onSelectHour}
             >
               {hour}
             </span>
@@ -142,7 +143,7 @@ class TimeDisplay extends Component {
             <span
               style={prepareStyles(Object.assign({},
                 styles.clickable, mode === 'minute' ? {} : styles.inactive))}
-              onTouchTap={onSelectMin}
+              onClick={onSelectMin}
             >
               {min}
             </span>

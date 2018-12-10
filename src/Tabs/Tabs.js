@@ -1,10 +1,5 @@
-import React, {Component,
-  createElement,
-  cloneElement,
-  Children,
-  isValidElement,
-  PropTypes,
-} from 'react';
+import React, {Component, createElement, cloneElement, Children, isValidElement} from 'react';
+import PropTypes from 'prop-types';
 import warning from 'warning';
 import TabTemplate from './TabTemplate';
 import InkBar from './InkBar';
@@ -51,6 +46,10 @@ class Tabs extends Component {
      * Override the inline-styles of the InkBar.
      */
     inkBarStyle: PropTypes.object,
+    /**
+     * Override the inline-styles of the InkBar container.
+     */
+    inkBarContainerStyle: PropTypes.object,
     /**
      * Called when the selected value change.
      */
@@ -151,7 +150,7 @@ class Tabs extends Component {
     return selectedIndex;
   }
 
-  handleTabTouchTap = (value, event, tab) => {
+  handleTabClick = (value, event, tab) => {
     const valueLink = this.getValueLink(this.props);
     const index = tab.props.index;
 
@@ -179,6 +178,7 @@ class Tabs extends Component {
       contentContainerStyle,
       initialSelectedIndex, // eslint-disable-line no-unused-vars
       inkBarStyle,
+      inkBarContainerStyle,
       onChange, // eslint-disable-line no-unused-vars
       style,
       tabItemContainerStyle,
@@ -216,13 +216,15 @@ class Tabs extends Component {
         index: index,
         selected: this.getSelected(tab, index),
         width: `${width}%`,
-        onTouchTap: this.handleTabTouchTap,
+        onClick: this.handleTabClick,
       });
     });
 
-    const inkBar = this.state.selectedIndex !== -1 ? (
+    const realSelectedIndex = valueLink.value ? this.getSelectedIndex(this.props) : this.state.selectedIndex;
+
+    const inkBar = realSelectedIndex !== -1 ? (
       <InkBar
-        left={`${width * this.state.selectedIndex}%`}
+        left={`${width * realSelectedIndex}%`}
         width={`${width}%`}
         style={inkBarStyle}
       />
@@ -236,7 +238,7 @@ class Tabs extends Component {
         <div style={prepareStyles(Object.assign(styles.tabItemContainer, tabItemContainerStyle))}>
           {tabs}
         </div>
-        <div style={{width: inkBarContainerWidth}}>
+        <div style={prepareStyles(Object.assign({width: inkBarContainerWidth}, inkBarContainerStyle))}>
           {inkBar}
         </div>
         <div

@@ -1,10 +1,12 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import shallowEqual from 'recompose/shallowEqual';
 import Popover from '../Popover/Popover';
 import CheckIcon from '../svg-icons/navigation/check';
 import ListItem from '../List/ListItem';
 import Menu from '../Menu/Menu';
+import propTypes from '../utils/propTypes';
 
 const nestedMenuStyle = {
   position: 'relative',
@@ -19,7 +21,7 @@ function getStyles(props, context) {
   const styles = {
     root: {
       color: props.disabled ? disabledColor : textColor,
-      cursor: props.disabled ? 'not-allowed' : 'pointer',
+      cursor: props.disabled ? 'default' : 'pointer',
       minHeight: props.desktop ? '32px' : '48px',
       lineHeight: props.desktop ? '32px' : '48px',
       fontSize: props.desktop ? 15 : 16,
@@ -58,6 +60,14 @@ class MenuItem extends Component {
   static muiName = 'MenuItem';
 
   static propTypes = {
+    /**
+     * Location of the anchor for the popover of nested `MenuItem`
+     * elements.
+     * Options:
+     * horizontal: [left, middle, right]
+     * vertical: [top, center, bottom].
+     */
+    anchorOrigin: propTypes.origin,
     /**
      * Override the default animation component used.
      */
@@ -107,11 +117,11 @@ class MenuItem extends Component {
      */
     menuItems: PropTypes.node,
     /**
-     * Callback function fired when the menu item is touch-tapped.
+     * Callback function fired when the menu item is clicked.
      *
-     * @param {object} event TouchTap event targeting the menu item.
+     * @param {object} event Click event targeting the menu item.
      */
-    onTouchTap: PropTypes.func,
+    onClick: PropTypes.func,
     /**
      * Can be used to render primary text within the menu item.
      */
@@ -129,17 +139,27 @@ class MenuItem extends Component {
      */
     style: PropTypes.object,
     /**
+     * Location on the popover of nested `MenuItem` elements that will attach
+     * to the anchor's origin.
+     * Options:
+     * horizontal: [left, middle, right]
+     * vertical: [top, center, bottom].
+     */
+    targetOrigin: propTypes.origin,
+    /**
      * The value of the menu item.
      */
     value: PropTypes.any,
   };
 
   static defaultProps = {
+    anchorOrigin: {horizontal: 'right', vertical: 'top'},
     checked: false,
     desktop: false,
     disabled: false,
     focusState: 'none',
     insetChildren: false,
+    targetOrigin: {horizontal: 'left', vertical: 'top'},
   };
 
   static contextTypes = {
@@ -186,19 +206,19 @@ class MenuItem extends Component {
 
   cloneMenuItem = (item) => {
     return React.cloneElement(item, {
-      onTouchTap: (event) => {
+      onClick: (event) => {
         if (!item.props.menuItems) {
           this.handleRequestClose();
         }
 
-        if (item.props.onTouchTap) {
-          item.props.onTouchTap(event);
+        if (item.props.onClick) {
+          item.props.onClick(event);
         }
       },
     });
   };
 
-  handleTouchTap = (event) => {
+  handleClick = (event) => {
     event.preventDefault();
 
     this.setState({
@@ -206,8 +226,8 @@ class MenuItem extends Component {
       anchorEl: ReactDOM.findDOMNode(this),
     });
 
-    if (this.props.onTouchTap) {
-      this.props.onTouchTap(event);
+    if (this.props.onClick) {
+      this.props.onClick(event);
     }
   };
 
@@ -233,6 +253,8 @@ class MenuItem extends Component {
       secondaryText,
       style,
       animation,
+      anchorOrigin,
+      targetOrigin,
       value, // eslint-disable-line no-unused-vars
       ...other
     } = this.props;
@@ -274,9 +296,10 @@ class MenuItem extends Component {
       childMenuPopover = (
         <Popover
           animation={animation}
-          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+          anchorOrigin={anchorOrigin}
           anchorEl={this.state.anchorEl}
           open={this.state.open}
+          targetOrigin={targetOrigin}
           useLayerForClickAway={false}
           onRequestClose={this.handleRequestClose}
         >
@@ -285,7 +308,7 @@ class MenuItem extends Component {
           </Menu>
         </Popover>
       );
-      other.onTouchTap = this.handleTouchTap;
+      other.onClick = this.handleClick;
     }
 
     return (
@@ -298,6 +321,7 @@ class MenuItem extends Component {
         leftIcon={leftIconElement}
         ref="listItem"
         rightIcon={rightIconElement}
+        role="menuitem"
         style={mergedRootStyles}
       >
         {children}

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Transition from '../styles/transitions';
 import {isEqualDate} from './dateUtils';
 import EnhancedButton from '../internal/EnhancedButton';
@@ -56,8 +57,8 @@ class DayButton extends Component {
     date: PropTypes.object,
     disabled: PropTypes.bool,
     locale: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
     onKeyboardFocus: PropTypes.func,
-    onTouchTap: PropTypes.func,
     selected: PropTypes.bool,
   };
 
@@ -86,9 +87,9 @@ class DayButton extends Component {
     }
   };
 
-  handleTouchTap = (event) => {
-    if (!this.props.disabled && this.props.onTouchTap) {
-      this.props.onTouchTap(event, this.props.date);
+  handleClick = (event) => {
+    if (!this.props.disabled && this.props.onClick) {
+      this.props.onClick(event, this.props.date);
     }
   };
 
@@ -104,7 +105,7 @@ class DayButton extends Component {
       date,
       disabled,
       locale,
-      onTouchTap, // eslint-disable-line no-unused-vars
+      onClick, // eslint-disable-line no-unused-vars
       selected, // eslint-disable-line no-unused-vars
       ...other
     } = this.props;
@@ -121,7 +122,7 @@ class DayButton extends Component {
         onKeyboardFocus={this.handleKeyboardFocus}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
-        onTouchTap={this.handleTouchTap}
+        onClick={this.handleClick}
         style={styles.root}
       >
         <div style={prepareStyles(styles.buttonState)} />

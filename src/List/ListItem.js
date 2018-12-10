@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import shallowEqual from 'recompose/shallowEqual';
 import {fade} from '../utils/colorManipulator';
@@ -11,10 +12,12 @@ import NestedList from './NestedList';
 
 function getStyles(props, context, state) {
   const {
+    autoGenerateNestedIndicator,
     insetChildren,
     leftAvatar,
     leftCheckbox,
     leftIcon,
+    nestedItems,
     nestedLevel,
     rightAvatar,
     rightIcon,
@@ -34,9 +37,12 @@ function getStyles(props, context, state) {
   const twoLine = secondaryText && secondaryTextLines === 1;
   const threeLine = secondaryText && secondaryTextLines > 1;
 
+  const isKeyboardFocused =
+    (props.isKeyboardFocused !== undefined ? props : state).isKeyboardFocused;
+
   const styles = {
     root: {
-      backgroundColor: (state.isKeyboardFocused || state.hovered) &&
+      backgroundColor: (isKeyboardFocused || state.hovered) &&
       !state.rightIconButtonHovered &&
       !state.rightIconButtonKeyboardFocused ? hoverColor : null,
       color: textColor,
@@ -51,7 +57,9 @@ function getStyles(props, context, state) {
     innerDiv: {
       marginLeft: nestedLevel * listItem.nestedLevelDepth,
       paddingLeft: leftIcon || leftAvatar || leftCheckbox || insetChildren ? 72 : 16,
-      paddingRight: rightIcon || rightAvatar || rightIconButton ? 56 : rightToggle ? 72 : 16,
+      paddingRight: rightIcon || rightAvatar || rightIconButton ||
+                    (nestedItems.length && autoGenerateNestedIndicator) ?
+                    56 : rightToggle ? 72 : 16,
       paddingBottom: singleAvatar ? 20 : 16,
       paddingTop: singleNoAvatar || threeLine ? 16 : 20,
       position: 'relative',
@@ -154,6 +162,17 @@ class ListItem extends Component {
      */
     children: PropTypes.node,
     /**
+     * The element to use as the container for the ListItem. Either a string to
+     * use a DOM element or a ReactElement. This is useful for wrapping the
+     * ListItem in a custom Link component. If a ReactElement is given, ensure
+     * that it passes all of its given props through to the underlying DOM
+     * element and renders its children prop for proper integration.
+     */
+    containerElement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
+    ]),
+    /**
      * If true, the element will not be able to be focused by the keyboard.
      */
     disableKeyboardFocus: PropTypes.bool,
@@ -182,6 +201,14 @@ class ListItem extends Component {
      */
     insetChildren: PropTypes.bool,
     /**
+     * Use to control if the list item should render as keyboard focused.  If
+     * undefined (default), this will be automatically managed.  If provided,
+     * it will change the components style.  Note that this will not change the
+     * actual focus - and should only be used when you want to simulate
+     * keyboard focus (eg. in a rich text input autocomplete).
+     */
+    isKeyboardFocused: PropTypes.bool,
+    /**
      * This is the `Avatar` element to be displayed on the left side.
      */
     leftAvatar: PropTypes.element,
@@ -207,6 +234,12 @@ class ListItem extends Component {
      */
     nestedListStyle: PropTypes.object,
     /**
+     * Callback function fired when the list item is clicked.
+     *
+     * @param {object} event Click event targeting the list item.
+     */
+    onClick: PropTypes.func,
+    /**
      * Callback function fired when the `ListItem` is focused or blurred by the keyboard.
      *
      * @param {object} event `focus` or `blur` event targeting the `ListItem`.
@@ -218,7 +251,7 @@ class ListItem extends Component {
     /** @ignore */
     onMouseLeave: PropTypes.func,
     /**
-     * Callbak function fired when the `ListItem` toggles its nested list.
+     * Callback function fired when the `ListItem` toggles its nested list.
      *
      * @param {object} listItem The `ListItem`.
      */
@@ -227,8 +260,6 @@ class ListItem extends Component {
     onTouchEnd: PropTypes.func,
     /** @ignore */
     onTouchStart: PropTypes.func,
-    /** @ignore */
-    onTouchTap: PropTypes.func,
     /**
      * Control toggle state of nested list.
      */
@@ -281,6 +312,7 @@ class ListItem extends Component {
 
   static defaultProps = {
     autoGenerateNestedIndicator: true,
+    containerElement: 'span',
     disableKeyboardFocus: false,
     disabled: false,
     initiallyOpen: false,
@@ -339,10 +371,8 @@ class ListItem extends Component {
 
   // This method is needed by the `MenuItem` component.
   applyFocusState(focusState) {
-    const button = this.refs.enhancedButton;
-
-    if (button) {
-      const buttonEl = ReactDOM.findDOMNode(button);
+    if (this.button) {
+      const buttonEl = ReactDOM.findDOMNode(this.button);
 
       switch (focusState) {
         case 'none':
@@ -352,7 +382,7 @@ class ListItem extends Component {
           buttonEl.focus();
           break;
         case 'keyboard-focused':
-          button.setKeyboardFocus();
+          this.button.setKeyboardFocus();
           buttonEl.focus();
           break;
       }
@@ -441,7 +471,20 @@ class ListItem extends Component {
     this.props.onMouseLeave(event);
   };
 
+  handleClick = (event) => {
+    if (this.props.onClick) {
+      this.props.onClick(event);
+    }
+
+    if (this.props.primaryTogglesNestedList) {
+      this.handleNestedListToggle(event);
+    }
+  };
+
   handleNestedListToggle = (event) => {
+    if (this.props.leftCheckbox) {
+      event.preventDefault();
+    }
     event.stopPropagation();
 
     if (this.props.open === null) {
@@ -491,12 +534,12 @@ class ListItem extends Component {
     if (iconButton && iconButton.props.onMouseUp) iconButton.props.onMouseUp(event);
   };
 
-  handleRightIconButtonTouchTap = (event) => {
+  handleRightIconButtonClick = (event) => {
     const iconButton = this.props.rightIconButton;
 
     // Stop the event from bubbling up to the list-item
     event.stopPropagation();
-    if (iconButton && iconButton.props.onTouchTap) iconButton.props.onTouchTap(event);
+    if (iconButton && iconButton.props.onClick) iconButton.props.onClick(event);
   };
 
   handleTouchStart = (event) => {
@@ -526,6 +569,7 @@ class ListItem extends Component {
     const {
       autoGenerateNestedIndicator,
       children,
+      containerElement,
       disabled,
       disableKeyboardFocus,
       hoverColor, // eslint-disable-line no-unused-vars
@@ -539,11 +583,12 @@ class ListItem extends Component {
       nestedLevel,
       nestedListStyle,
       onKeyboardFocus, // eslint-disable-line no-unused-vars
+      isKeyboardFocused, // eslint-disable-line no-unused-vars
       onMouseEnter, // eslint-disable-line no-unused-vars
       onMouseLeave, // eslint-disable-line no-unused-vars
       onNestedListToggle, // eslint-disable-line no-unused-vars
       onTouchStart, // eslint-disable-line no-unused-vars
-      onTouchTap,
+      onClick, // eslint-disable-line no-unused-vars
       rightAvatar,
       rightIcon,
       rightIconButton,
@@ -619,7 +664,7 @@ class ListItem extends Component {
         onKeyboardFocus: this.handleRightIconButtonKeyboardFocus,
         onMouseEnter: this.handleRightIconButtonMouseEnter,
         onMouseLeave: this.handleRightIconButtonMouseLeave,
-        onTouchTap: this.handleRightIconButtonTouchTap,
+        onClick: this.handleRightIconButtonClick,
         onMouseDown: this.handleRightIconButtonMouseUp,
         onMouseUp: this.handleRightIconButtonMouseUp,
       };
@@ -629,7 +674,7 @@ class ListItem extends Component {
         rightIconButtonElement = this.state.open ?
           <IconButton><OpenIcon /></IconButton> :
           <IconButton><CloseIcon /></IconButton>;
-        rightIconButtonHandlers.onTouchTap = this.handleNestedListToggle;
+        rightIconButtonHandlers.onClick = this.handleNestedListToggle;
       }
 
       this.pushElement(
@@ -680,7 +725,7 @@ class ListItem extends Component {
           simpleLabel ? this.createLabelElement(styles, contentChildren, other) :
           disabled ? this.createDisabledElement(styles, contentChildren, other) : (
             <EnhancedButton
-              containerElement="span"
+              containerElement={containerElement}
               {...other}
               disableKeyboardFocus={disableKeyboardFocus || this.state.rightIconButtonKeyboardFocused}
               onKeyboardFocus={this.handleKeyboardFocus}
@@ -688,8 +733,9 @@ class ListItem extends Component {
               onMouseEnter={this.handleMouseEnter}
               onTouchStart={this.handleTouchStart}
               onTouchEnd={this.handleTouchEnd}
-              onTouchTap={primaryTogglesNestedList ? this.handleNestedListToggle : onTouchTap}
-              ref="enhancedButton"
+              onClick={this.handleClick}
+              disabled={disabled}
+              ref={(node) => this.button = node}
               style={Object.assign({}, styles.root, style)}
             >
               <div style={prepareStyles(Object.assign(styles.innerDiv, innerDivStyle))}>

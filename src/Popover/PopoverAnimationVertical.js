@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Paper from '../Paper';
 import transitions from '../styles/transitions';
 import propTypes from '../utils/propTypes';
@@ -7,7 +8,7 @@ function getStyles(props, context, state) {
   const {targetOrigin} = props;
   const {open} = state;
   const {muiTheme} = context;
-  const horizontal = targetOrigin.horizontal.replace('middle', 'vertical');
+  const horizontal = targetOrigin.horizontal.replace('middle', 'center');
 
   return {
     root: {

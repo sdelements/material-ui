@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import transitions from '../styles/transitions';
 import SlideInTransitionGroup from '../internal/SlideIn';
 
@@ -14,7 +15,7 @@ function getStyles(props, context, state) {
       float: isLandscape ? 'left' : 'none',
       fontWeight: 700,
       display: 'inline-block',
-      backgroundColor: datePicker.selectColor,
+      backgroundColor: datePicker.headerColor,
       borderTopLeftRadius: 2,
       borderTopRightRadius: isLandscape ? 0 : 2,
       borderBottomLeftRadius: isLandscape ? 2 : 0,
@@ -48,7 +49,7 @@ function getStyles(props, context, state) {
       marginBottom: 10,
     },
     yearTitle: {
-      cursor: props.disableYearSelection ? 'not-allowed' : (!selectedYear ? 'pointer' : 'default'),
+      cursor: props.disableYearSelection || selectedYear ? 'default' : 'pointer',
     },
   };
 
@@ -62,8 +63,8 @@ class DateDisplay extends Component {
     locale: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(['portrait', 'landscape']),
     monthDaySelected: PropTypes.bool,
-    onTouchTapMonthDay: PropTypes.func,
-    onTouchTapYear: PropTypes.func,
+    onClickMonthDay: PropTypes.func,
+    onClickYear: PropTypes.func,
     selectedDate: PropTypes.object.isRequired,
     style: PropTypes.object,
   };
@@ -103,17 +104,17 @@ class DateDisplay extends Component {
     }
   }
 
-  handleTouchTapMonthDay = () => {
-    if (this.props.onTouchTapMonthDay && this.state.selectedYear) {
-      this.props.onTouchTapMonthDay();
+  handleClickMonthDay = () => {
+    if (this.props.onClickMonthDay && this.state.selectedYear) {
+      this.props.onClickMonthDay();
     }
 
     this.setState({selectedYear: false});
   };
 
-  handleTouchTapYear = () => {
-    if (this.props.onTouchTapYear && !this.props.disableYearSelection && !this.state.selectedYear) {
-      this.props.onTouchTapYear();
+  handleClickYear = () => {
+    if (this.props.onClickYear && !this.props.disableYearSelection && !this.state.selectedYear) {
+      this.props.onClickYear();
     }
 
     if (!this.props.disableYearSelection) {
@@ -128,8 +129,8 @@ class DateDisplay extends Component {
       locale,
       mode, // eslint-disable-line no-unused-vars
       monthDaySelected, // eslint-disable-line no-unused-vars
-      onTouchTapMonthDay, // eslint-disable-line no-unused-vars
-      onTouchTapYear, // eslint-disable-line no-unused-vars
+      onClickMonthDay, // eslint-disable-line no-unused-vars
+      onClickYear, // eslint-disable-line no-unused-vars
       selectedDate, // eslint-disable-line no-unused-vars
       style,
       ...other
@@ -151,14 +152,14 @@ class DateDisplay extends Component {
     return (
       <div {...other} style={prepareStyles(styles.root, style)}>
         <SlideInTransitionGroup style={styles.year} direction={this.state.transitionDirection}>
-          <div key={year} style={styles.yearTitle} onTouchTap={this.handleTouchTapYear}>
+          <div key={year} style={styles.yearTitle} onClick={this.handleClickYear}>
             {year}
           </div>
         </SlideInTransitionGroup>
         <SlideInTransitionGroup style={styles.monthDay} direction={this.state.transitionDirection}>
           <div
             key={dateTime}
-            onTouchTap={this.handleTouchTapMonthDay}
+            onClick={this.handleClickMonthDay}
             style={styles.monthDayTitle}
           >
             {dateTime}

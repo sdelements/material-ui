@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import YearButton from './YearButton';
-import {cloneDate} from './dateUtils';
 
 class CalendarYear extends Component {
   static propTypes = {
@@ -9,8 +9,9 @@ class CalendarYear extends Component {
     locale: PropTypes.string.isRequired,
     maxDate: PropTypes.object.isRequired,
     minDate: PropTypes.object.isRequired,
-    onTouchTapYear: PropTypes.func,
+    onClickYear: PropTypes.func,
     selectedDate: PropTypes.object.isRequired,
+    utils: PropTypes.object.isRequired,
     wordings: PropTypes.object,
   };
 
@@ -33,16 +34,15 @@ class CalendarYear extends Component {
       minDate,
       maxDate,
       selectedDate,
+      utils,
     } = this.props;
 
-    const minYear = minDate.getFullYear();
-    const maxYear = maxDate.getFullYear();
+    const minYear = utils.getYear(minDate);
+    const maxYear = utils.getYear(maxDate);
     const years = [];
-    const dateCheck = cloneDate(selectedDate);
 
     for (let year = minYear; year <= maxYear; year++) {
-      dateCheck.setFullYear(year);
-      const selected = selectedDate.getFullYear() === year;
+      const selected = utils.getYear(selectedDate) === year;
       const selectedProps = {};
       if (selected) {
         selectedProps.ref = 'selectedYearButton';
@@ -50,14 +50,15 @@ class CalendarYear extends Component {
 
       const yearFormated = new DateTimeFormat(locale, {
         year: 'numeric',
-      }).format(dateCheck);
+      }).format(utils.setYear(selectedDate, year));
 
       const yearButton = (
         <YearButton
           key={`yb${year}`}
-          onTouchTap={this.handleTouchTapYear}
+          onClick={this.handleClickYear}
           selected={selected}
           year={year}
+          utils={utils}
           {...selectedProps}
         >
           {yearFormated}
@@ -85,9 +86,9 @@ class CalendarYear extends Component {
     container.scrollTop = scrollYOffset;
   }
 
-  handleTouchTapYear = (event, year) => {
-    if (this.props.onTouchTapYear) {
-      this.props.onTouchTapYear(event, year);
+  handleClickYear = (event, year) => {
+    if (this.props.onClickYear) {
+      this.props.onClickYear(event, year);
     }
   };
 

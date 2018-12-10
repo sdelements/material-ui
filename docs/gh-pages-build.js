@@ -66,7 +66,7 @@ function lastCommitIsHead() {
 }
 
 /**
- * Add new version number to versions.js
+ * Add new version number to versions.js, commit it, and tag the release
  * The checks for HEAD can be removed once HEAD builds are automated, as the first entry will always be HEAD.
  */
 function addMenuVersion(version) {
@@ -85,8 +85,10 @@ function addMenuVersion(version) {
     // Write the file
     fs.writeFileSync(versionsFile, JSON.stringify(versions, null, 2));
 
-  // Commit it (on master branch)
-    execho('git add ' + versionsFile + ' && git commit -m ' + '\'[Docs] Add ' + version + ' to versions.json\'');
+  // Commit it (on v0.x branch & tag the release)
+    execho('git add ' + versionsFile);
+    execho('git commit -m ' + '\'[Docs] Add ' + version + ' to versions.json\'');
+    execho('git tag ' + version);
   }
 }
 
@@ -98,16 +100,16 @@ function buildDocs() {
   process.chdir(__dirname);
 
   // Checkout the `gh-pages` branch and update from upstream
-  execho('git checkout gh-pages && git pull upstream gh-pages');
+  execho('git checkout gh-pages && git pull docs-site gh-pages');
 
   // Delete last HEAD commit to keep the history clean, unless we're committing a new HEAD version
   if (lastCommitIsHead() && version !== 'HEAD') {
     execho('git reset --hard HEAD~1');
   }
 
-  // Checkout the tag `version` or master for HEAD
+  // Checkout the tag `version` or v0.x for HEAD
   if (version === 'HEAD') {
-    execho('git checkout --detach master');
+    execho('git checkout --detach v0.x');
   } else {
     execho('git checkout tags/' + version);
   }

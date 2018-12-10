@@ -3,6 +3,9 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {assert} from 'chai';
 import Calendar from './Calendar';
+import CalendarMonth from './CalendarMonth';
+import CalendarYear from './CalendarYear';
+import DateDisplay from './DateDisplay';
 import {addMonths, dateTimeFormat} from './dateUtils';
 import getMuiTheme from '../styles/getMuiTheme';
 
@@ -191,6 +194,60 @@ describe('<Calendar />', () => {
       wrapper.update();
 
       assert.notOk(wrapper.find('CalendarToolbar').prop('prevMonth'));
+    });
+  });
+
+  describe('Date Display', () => {
+    it('should be visible by default', () => {
+      const wrapper = shallowWithContext(
+        <Calendar
+          DateTimeFormat={dateTimeFormat}
+          locale="en-US"
+          mode="landscape"
+        />
+      );
+
+      assert.strictEqual(wrapper.find(DateDisplay).length, 1, 'should show date display');
+      assert.strictEqual(wrapper.props().style.width, 479, 'should allow space for date display');
+    });
+
+    it('should be hidden when hideCalendarDate is set', () => {
+      const wrapper = shallowWithContext(
+        <Calendar
+          DateTimeFormat={dateTimeFormat}
+          locale="en-US"
+          mode="landscape"
+          hideCalendarDate={true}
+        />
+      );
+
+      assert.strictEqual(wrapper.find(DateDisplay).length, 0, 'should hide date display');
+      assert.strictEqual(wrapper.props().style.width, 310, 'should not allow space for date display');
+    });
+  });
+
+  describe('initial state', () => {
+    it('should display the month day pick view by default', () => {
+      const wrapper = shallowWithContext(
+        <Calendar
+          DateTimeFormat={dateTimeFormat}
+          locale="en-US"
+        />
+      );
+
+      assert.strictEqual(wrapper.find(CalendarMonth).length, 1, 'should have the calendar month select');
+    });
+
+    it('should display the year selection view when openToYearSelection is true', () => {
+      const wrapper = shallowWithContext(
+        <Calendar
+          DateTimeFormat={dateTimeFormat}
+          locale="en-US"
+          openToYearSelection={true}
+        />
+      );
+
+      assert.strictEqual(wrapper.find(CalendarYear).length, 1, 'should have the year select');
     });
   });
 });

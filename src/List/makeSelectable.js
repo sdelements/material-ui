@@ -1,4 +1,5 @@
-import React, {Component, Children, PropTypes} from 'react';
+import React, {Component, Children} from 'react';
+import PropTypes from 'prop-types';
 import {fade} from '../utils/colorManipulator';
 
 export const makeSelectable = (MyComponent) => {
@@ -27,10 +28,10 @@ export const makeSelectable = (MyComponent) => {
         this.keyIndex += 1;
 
         return React.cloneElement(child, {
-          onTouchTap: (event) => {
-            this.handleItemTouchTap(event, child);
-            if (child.props.onTouchTap) {
-              child.props.onTouchTap(event);
+          onClick: (event) => {
+            this.handleItemClick(event, child);
+            if (child.props.onClick) {
+              child.props.onClick(event);
             }
           },
           key: this.keyIndex,
@@ -61,7 +62,7 @@ export const makeSelectable = (MyComponent) => {
       return props.value === child.props.value;
     }
 
-    handleItemTouchTap = (event, item) => {
+    handleItemClick = (event, item) => {
       const itemValue = item.props.value;
 
       if (itemValue !== this.props.value) {

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {parse} from 'react-docgen';
 import {parse as parseDoctrine} from 'doctrine';
 import MarkdownElement from './MarkdownElement';
@@ -38,8 +39,9 @@ function generatePropType(type) {
       return type.raw;
 
     case 'enum':
-      const values = type.value.map((v) => v.value).join('<br>&nbsp;');
-      return `enum:<br>&nbsp;${values}<br>`;
+    case 'union':
+      const values = type.value.map((v) => v.value || v.name).join('<br>&nbsp;');
+      return `${type.name}:<br>&nbsp;${values}<br>`;
 
     default:
       return type.name;

@@ -1,5 +1,6 @@
 /* eslint-env mocha */
-import React from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {mount, shallow} from 'enzyme';
 import {spy} from 'sinon';
 import {assert} from 'chai';
@@ -12,7 +13,10 @@ import keycode from 'keycode';
 describe('<Menu />', () => {
   const muiTheme = getMuiTheme();
   const shallowWithContext = (node) => shallow(node, {context: {muiTheme}});
-  const mountWithContext = (node) => mount(node, {context: {muiTheme}});
+  const mountWithContext = (node) => mount(node, {
+    context: {muiTheme},
+    childContextTypes: {muiTheme: PropTypes.object},
+  });
   const keycodeEvent = (key) => ({keyCode: keycode(key)});
 
   describe('onMenuItemFocusChange', () => {
@@ -133,6 +137,9 @@ describe('<Menu />', () => {
         '"b00!" does not change the focus index, which is probably a bug');
       onMenuItemFocusChangeSpy.reset();
 
+      // Test RegExp-breaking key. If implementation is testing with RegExp, a syntax error will throw.
+      wrapper.simulate('keydown', keycodeEvent('\\'));
+
       wrapper.unmount(); // Otherwise the timer in FocusRipple keeps Node from exiting
     });
   });
@@ -162,6 +169,24 @@ describe('<Menu />', () => {
   });
 
   describe('prop: children', () => {
+    it("should render disabled MenuItem with the Menu's menuItemStyle", () => {
+      const wrapper = shallowWithContext(
+        <Menu menuItemStyle={{fontSize: 60}}>
+          <MenuItem style={{fontSize: 10}} primaryText="item 1" />
+          <MenuItem disabled={true} style={{fontSize: 10}} primaryText="item 2" />
+        </Menu>
+      );
+
+      const menuItemsAndDividers = wrapper.children().children().children();
+      assert.strictEqual(menuItemsAndDividers.length, 2, 'there should be two children');
+      assert.strictEqual(menuItemsAndDividers.get(0).type, MenuItem, 'first child should be a MenuItem');
+      assert.strictEqual(menuItemsAndDividers.get(1).type, MenuItem, 'second child should be a MenuItem');
+      assert.strictEqual(menuItemsAndDividers.get(0).props.style.fontSize, 60,
+        'the normal MenuItem should merge styles with menuItemStyle');
+      assert.strictEqual(menuItemsAndDividers.get(1).props.style.fontSize, 60,
+        'the disabled MenuItem should merge styles with menuItemStyle');
+    });
+
     it("should merge the Divider's styles over the Menu's default divider styles", () => {
       const style = {
         color: 'red',
@@ -193,6 +218,66 @@ describe('<Menu />', () => {
         </Menu>
       );
       assert.strictEqual(wrapper.contains(child), true);
+    });
+  });
+
+  describe('MultiSelect', () => {
+    it('should multi select 2 items after selecting 3 and deselecting 1', () => {
+      class MyComponent1 extends Component {
+        state = {
+          value: null,
+        }
+
+        handleChange = (event, value) => {
+          this.setState({value: value});
+        }
+
+        render() {
+          return (
+            <Menu
+              multiple={true}
+              value={this.state.value}
+              onChange={this.handleChange}
+            >
+              <MenuItem className="item1" value="item1" primaryText="item 1" />
+              <MenuItem className="item2" value="item2" primaryText="item 2" />
+              <MenuItem className="item3" value="item3" primaryText="item 3" />
+            </Menu>
+          );
+        }
+      }
+
+      const wrapper = mountWithContext(<MyComponent1 />);
+
+      wrapper.find('.item1').simulate('click');
+      wrapper.find('.item2').simulate('click');
+      wrapper.find('.item3').simulate('click');
+      wrapper.find('.item1').simulate('click');   // deselect
+
+      assert.deepEqual(wrapper.state().value, ['item2', 'item3']);
+    });
+  });
+
+  describe('Nested menu', () => {
+    it('should ignore loosing focus on click away for item with menu items', () => {
+      const menuItems = [<MenuItem />, <MenuItem />];
+
+      const wrapper = mountWithContext(
+        <Menu className="menu">
+          <MenuItem className="item1" />
+          <MenuItem className="item2" menuItems={menuItems} />
+        </Menu>
+      );
+
+      wrapper.find('.item1').simulate('click');
+      assert.strictEqual(wrapper.state('focusIndex'), 0);
+      document.body.dispatchEvent(new window.Event('mouseup', {bubbles: true}));
+      assert.strictEqual(wrapper.state('focusIndex'), -1);
+
+      wrapper.find('.item2').simulate('click');
+      assert.strictEqual(wrapper.state('focusIndex'), 1);
+      document.body.dispatchEvent(new window.Event('mouseup', {bubbles: true}));
+      assert.strictEqual(wrapper.state('focusIndex'), 1);
     });
   });
 });

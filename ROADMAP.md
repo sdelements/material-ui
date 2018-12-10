@@ -2,26 +2,27 @@
 
 The roadmap is a living document, and it is likely that priorities will change, but the list below should give some indication of our plans for the next major release, and for the future.
 
-:warning: New features based on `v0.17.x` have low priority and will most likely not be reviewed nor merged. We want to focus on bug fixes.
+:warning: New features based on `v0.18.x` have low priority and will most likely not be reviewed nor merged. We want to focus on bug fixes.
 
-## [next](https://github.com/callemall/material-ui/milestone/14) (expected in the next couple months)
+## Version 1 (published on NPM under the next tag)
 
-The `next` release is going to be huge :sparkles:
+Version 1 release is going to be huge :sparkles:.
+We host a temporary [documentation](https://material-ui-1dab0.firebaseapp.com) for the pre-releases.
 
-Material-UI was started [2 years ago](https://github.com/callemall/material-ui/commit/28b768913b75752ecf9b6bb32766e27c241dbc46).
+Material-UI was started [3 years ago](https://github.com/callemall/material-ui/commit/28b768913b75752ecf9b6bb32766e27c241dbc46).
 The ecosystem has evolved a lot since then, we have also learned a lot.
 [@nathanmarks](https://github.com/nathanmarks/) started an ambitious task, rebuilding Material-UI from the **ground-up**
 taking advantage of this knowledge to address long-standing issues.
-Expect various breaking changes.
+Expect various **breaking changes**.
 
-The core team is now helping him in the [`next`](https://github.com/callemall/material-ui/tree/next) branch.
-Here are some issues that we plan to fix along the way.
+The core team is now helping him in the [v1-beta](https://github.com/callemall/material-ui/tree/v1-beta) branch.
+If you are interested in following our progress or if you want to help us reach that goal faster, you can have a look at the following milestones:
+- ~~[v1.0.0-beta](https://github.com/callemall/material-ui/milestone/22)~~ - complete!
+- [v1.0.0-prerelease](https://github.com/callemall/material-ui/milestone/14)
 
-For more details, you can have a look a the [next milestone](https://github.com/callemall/material-ui/milestone/14) as well as the [next project](https://github.com/callemall/material-ui/projects/1)
+## Q&A with the v1-beta branch
 
-## Q&A with the next branch
-
-The `next` branch has become more mature.
+The `v1-beta` branch has become more mature.
 We think that it's a good time to communicate more on this effort.
 We have a lot of people opening PRs and getting them closed, this is not a good thing.
 This Q&A tries to answer some of your questions.
@@ -60,7 +61,7 @@ Yes, it does. You can have a look at [this presentation](https://github.com/oliv
 
 ## What does it mean to migrate a component? Should we discuss each one of them first?
 
-Migrating a component to the `next` branch isn't just a style migration.
+Migrating a component to the `v1-beta` branch isn't just a style migration.
 We think that it's our best opportunity to clear the API and improve the implementation of the components.
 @nathanmarks ended up fixing a lot of long standing issues in the process.
 
@@ -73,33 +74,38 @@ We should answer the following questions:
 
 That conversation could start on one of the following [issues](https://github.com/callemall/material-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARefactoring+label%3Anext).
 
-### How do I know if a component still needs to be migrated `next`?
+### How do I know if a component still needs to be migrated `v1-beta`?
 
-We have [Github project](https://github.com/callemall/material-ui/projects/1) to **coordinate** the work toward the `next` release.
-You can check the *Component to migrate* column to know the ones needing to be migrated to `next`.
+We have [Github project](https://github.com/callemall/material-ui/projects/1) to **coordinate** the work toward the `v1-beta` release.
+You can check the *Component to migrate* column to know the ones needing to be migrated to `v1-beta`.
 
-### How do I start migrating components to the `next` branch?
+### How do I start migrating components to the `v1-beta` branch?
 
 Once we agree on the migration plan you're gonna have to get your hands dirty.
 That's really up to you. At least, you gonna have to
-- clone the `next` branch
+- clone the `v1-beta` branch
 - install the npm dependencies
 - play with the documentation site
 - write some documentation
 - write some tests (unit, integration, visual)
 
-### When do we intend to release `next`?
+### When do we intend to release `v1-beta`?
 
-We don't have an ETA for the release of the `next` branch,
-however, it's going to follow a specific release plan:
+We don't have an ETA for the release of the `v1-beta` branch,
+however, we are going to try to follow this plan:
 
-1. We focus on migrating the components to the `next` branch. They may not be fully migrated.
-2. We merge the `next` branch into master.
-At that point, we're going to stop supporting the `v0.17.x` releases.
-3. We release our first alpha.
-4. We focus on finishing the migration of all the components to get a good feature parity with `v0.17.x`.
-5. We release our first pre-release.
-6. We ship :100:.
+1. We completely address the styling issue before moving from *alpha* to [*beta*](https://github.com/callemall/material-ui/milestone/22).
+2. We publish our first beta releases.
+3. We fix the last API inconsistencies (as we can make breaking changes without having to worry much).
+4. We merge the beta branch into master
+5. We publish our first pre-releases, if all goes well, we move to the next step.
+6. We publish v1 :tada:
+
+At that point, some features and components from the v0.x will be missing in the v1.
+So, what about them?
+- First, both versions can be used at the same time, people can progressively migrate, one component at the time.
+- Then, **with the help of the community** and over time, we will support more and more components.
+- We would rather **support few use-cases very well and allow people to build on top of it** than many poorly.
 
 ### Have we ever considered using the best libraries for each piece of functionality and provide only a wrapper for the UI?
 
@@ -110,7 +116,7 @@ We think that it should be done the other way around, i.e. providing a low-level
  - [react-swipeable-views](https://github.com/oliviertassinari/react-swipeable-views)
  - [react-dnd](https://github.com/gaearon/react-dnd)
 
-On the other hand, using a smart data library for the DatePicker / TimePicker would probably be much better as data management is tricky and not a core business.
+On the other hand, using a smart date library for the DatePicker / TimePicker would probably be much better as date management is tricky and not a core business.
 
 ## Future
 

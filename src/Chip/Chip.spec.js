@@ -18,7 +18,7 @@ describe('<Chip />', () => {
 
   describe('state', () => {
     const wrapper = themedShallow(
-      <Chip onTouchTap={() => {}}>Label</Chip>
+      <Chip onClick={() => {}}>Label</Chip>
     );
 
     it('renders with initial state of false for clicked and focused', () => {
@@ -123,7 +123,7 @@ describe('<Chip />', () => {
       const wrapper = themedShallow(
         <Chip onRequestDelete={handleRequestDelete}>Label</Chip>
       );
-      wrapper.childAt(1).simulate('touchTap', {stopPropagation() {}});
+      wrapper.childAt(1).simulate('click', {stopPropagation() {}});
       assert.ok(handleRequestDelete.calledOnce);
     });
 
@@ -158,6 +158,33 @@ describe('<Chip />', () => {
         wrapper.simulate(event, {stopPropagation() {}});
         assert.ok(handlers[event].calledOnce, `should trigger the ${event} callback`);
       });
+    });
+  });
+
+  describe('prop: containerElement', () => {
+    it('should use div if no containerElement specified', () => {
+      const wrapper = themedShallow(
+        <Chip>Label</Chip>
+      );
+      const button = wrapper.dive({context: {muiTheme}});
+      assert.strictEqual(button.is('div'), true, 'should match an div element');
+    });
+
+    it('should use the given string containerElement prop', () => {
+      const wrapper = themedShallow(
+        <Chip containerElement="span">Label</Chip>
+      );
+      const button = wrapper.dive({context: {muiTheme}});
+      assert.strictEqual(button.is('span'), true, 'should match an span element');
+    });
+
+    it('should use the given ReactElement containerElement prop', () => {
+      const CustomElement = (props) => <a {...props} />;
+      const wrapper = themedShallow(
+        <Chip containerElement={<CustomElement />}>Label</Chip>
+      );
+      const button = wrapper.dive({context: {muiTheme}});
+      assert.strictEqual(button.is(CustomElement), true, 'should match the custom element');
     });
   });
 });

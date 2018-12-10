@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import EventListener from 'react-event-listener';
 import keycode from 'keycode';
 import Calendar from './Calendar';
@@ -17,6 +18,7 @@ class DatePickerDialog extends Component {
     containerStyle: PropTypes.object,
     disableYearSelection: PropTypes.bool,
     firstDayOfWeek: PropTypes.number,
+    hideCalendarDate: PropTypes.bool,
     initialDate: PropTypes.object,
     locale: PropTypes.string,
     maxDate: PropTypes.object,
@@ -27,8 +29,10 @@ class DatePickerDialog extends Component {
     onDismiss: PropTypes.func,
     onShow: PropTypes.func,
     open: PropTypes.bool,
+    openToYearSelection: PropTypes.bool,
     shouldDisableDate: PropTypes.func,
     style: PropTypes.object,
+    utils: PropTypes.object,
   };
 
   static defaultProps = {
@@ -37,6 +41,7 @@ class DatePickerDialog extends Component {
     container: 'dialog',
     locale: 'en-US',
     okLabel: 'OK',
+    openToYearSelection: false,
   };
 
   static contextTypes = {
@@ -67,13 +72,13 @@ class DatePickerDialog extends Component {
     });
   };
 
-  handleTouchTapDay = () => {
+  handleClickDay = () => {
     if (this.props.autoOk) {
-      setTimeout(this.handleTouchTapOk, 300);
+      setTimeout(this.handleClickOk, 300);
     }
   };
 
-  handleTouchTapCancel = () => {
+  handleClickCancel = () => {
     this.dismiss();
   };
 
@@ -81,7 +86,7 @@ class DatePickerDialog extends Component {
     this.dismiss();
   };
 
-  handleTouchTapOk = () => {
+  handleClickOk = () => {
     if (this.props.onAccept && !this.refs.calendar.isSelectedDateDisabled()) {
       this.props.onAccept(this.refs.calendar.getSelectedDate());
     }
@@ -94,7 +99,7 @@ class DatePickerDialog extends Component {
   handleWindowKeyUp = (event) => {
     switch (keycode(event)) {
       case 'enter':
-        this.handleTouchTapOk();
+        this.handleClickOk();
         break;
     }
   };
@@ -121,9 +126,12 @@ class DatePickerDialog extends Component {
       onAccept, // eslint-disable-line no-unused-vars
       onDismiss, // eslint-disable-line no-unused-vars
       onShow, // eslint-disable-line no-unused-vars
+      openToYearSelection,
       shouldDisableDate,
+      hideCalendarDate,
       style, // eslint-disable-line no-unused-vars
       animation,
+      utils,
       ...other
     } = this.props;
 
@@ -131,12 +139,12 @@ class DatePickerDialog extends Component {
 
     const styles = {
       dialogContent: {
-        width: mode === 'landscape' ? 479 : 310,
+        width: (!hideCalendarDate && mode === 'landscape') ? 479 : 310,
       },
       dialogBodyContent: {
         padding: 0,
-        minHeight: mode === 'landscape' ? 330 : 434,
-        minWidth: mode === 'landscape' ? 479 : 310,
+        minHeight: (hideCalendarDate || mode === 'landscape') ? 330 : 434,
+        minWidth: (hideCalendarDate || mode !== 'landscape') ? 310 : 479,
       },
     };
 
@@ -170,7 +178,7 @@ class DatePickerDialog extends Component {
             firstDayOfWeek={firstDayOfWeek}
             initialDate={initialDate}
             locale={locale}
-            onTouchTapDay={this.handleTouchTapDay}
+            onClickDay={this.handleClickDay}
             maxDate={maxDate}
             minDate={minDate}
             mode={mode}
@@ -181,7 +189,12 @@ class DatePickerDialog extends Component {
             okClassName={okClassName}
             okLabel={okLabel}
             okStyle={okStyle}
+            onClickCancel={this.handleClickCancel}
+            onClickOk={this.handleClickOk}
+            openToYearSelection={openToYearSelection}
             shouldDisableDate={shouldDisableDate}
+            hideCalendarDate={hideCalendarDate}
+            utils={utils}
           />
         </Container>
       </div>

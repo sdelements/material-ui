@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Paper from '../Paper';
 import CardExpandable from './CardExpandable';
 
@@ -105,7 +106,7 @@ class Card extends Component {
         return;
       if (currentChild.props.actAsExpander === true) {
         doClone = true;
-        newProps.onTouchTap = this.handleExpanding;
+        newProps.onClick = this.handleExpanding;
         newProps.style = Object.assign({cursor: 'pointer'}, currentChild.props.style);
       }
       if (currentChild.props.showExpandableButton === true) {
@@ -116,6 +117,7 @@ class Card extends Component {
             expanded={expanded}
             onExpanding={this.handleExpanding}
             openIcon={currentChild.props.openIcon}
+            iconStyle={currentChild.props.iconStyle}
           />
         );
       }

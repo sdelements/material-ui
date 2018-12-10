@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import keycode from 'keycode';
 import TextField from '../TextField';
@@ -134,7 +135,7 @@ class AutoComplete extends Component {
      * Callback function that is fired when a list item is selected, or enter is pressed in the `TextField`.
      *
      * @param {string} chosenRequest Either the `TextField` input value, if enter is pressed in the `TextField`,
-     * or the text value of the corresponding list item that was selected.
+     * or the dataSource object corresponding to the list item that was selected.
      * @param {number} index The index in `dataSource` of the list item selected, or `-1` if enter is pressed in the
      * `TextField`.
      */
@@ -194,7 +195,6 @@ class AutoComplete extends Component {
     openOnFocus: false,
     onUpdateInput: () => {},
     onNewRequest: () => {},
-    searchText: '',
     menuCloseDelay: 300,
     targetOrigin: {
       vertical: 'top',
@@ -217,9 +217,9 @@ class AutoComplete extends Component {
     this.requestsList = [];
     this.setState({
       open: this.props.open,
-      searchText: this.props.searchText,
+      searchText: this.props.searchText || '',
     });
-    this.timerTouchTapCloseId = null;
+    this.timerClickCloseId = null;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -228,10 +228,16 @@ class AutoComplete extends Component {
         searchText: nextProps.searchText,
       });
     }
+    if (this.props.open !== nextProps.open) {
+      this.setState({
+        open: nextProps.open,
+        anchorEl: ReactDOM.findDOMNode(this.refs.searchTextField),
+      });
+    }
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timerTouchTapCloseId);
+    clearTimeout(this.timerClickCloseId);
     clearTimeout(this.timerBlurClose);
   }
 
@@ -259,26 +265,32 @@ class AutoComplete extends Component {
     event.preventDefault();
   };
 
-  handleItemTouchTap = (event, child) => {
+  handleItemClick = (event, child) => {
     const dataSource = this.props.dataSource;
-
     const index = parseInt(child.key, 10);
     const chosenRequest = dataSource[index];
     const searchText = this.chosenRequestText(chosenRequest);
 
-    this.setState({
-      searchText: searchText,
-    }, () => {
-      this.props.onUpdateInput(searchText, this.props.dataSource, {
-        source: 'touchTap',
-      });
-
-      this.timerTouchTapCloseId = setTimeout(() => {
-        this.timerTouchTapCloseId = null;
-        this.close();
-        this.props.onNewRequest(chosenRequest, index);
-      }, this.props.menuCloseDelay);
+    const updateInput = () => this.props.onUpdateInput(searchText, this.props.dataSource, {
+      source: 'click',
     });
+    this.timerClickCloseId = () => setTimeout(() => {
+      this.timerClickCloseId = null;
+      this.close();
+      this.props.onNewRequest(chosenRequest, index);
+    }, this.props.menuCloseDelay);
+
+    if (typeof this.props.searchText !== 'undefined') {
+      updateInput();
+      this.timerClickCloseId();
+    } else {
+      this.setState({
+        searchText: searchText,
+      }, () => {
+        updateInput();
+        this.timerClickCloseId();
+      });
+    }
   };
 
   chosenRequestText = (chosenRequest) => {
@@ -332,19 +344,24 @@ class AutoComplete extends Component {
       return;
     }
 
-    this.setState({
-      searchText: searchText,
+    const state = {
       open: true,
       anchorEl: ReactDOM.findDOMNode(this.refs.searchTextField),
-    }, () => {
-      this.props.onUpdateInput(searchText, this.props.dataSource, {
-        source: 'change',
-      });
+    };
+
+    if (this.props.searchText === undefined) {
+      state.searchText = searchText;
+    }
+
+    this.setState(state);
+
+    this.props.onUpdateInput(searchText, this.props.dataSource, {
+      source: 'change',
     });
   };
 
   handleBlur = (event) => {
-    if (this.state.focusTextField && this.timerTouchTapCloseId === null) {
+    if (this.state.focusTextField && this.timerClickCloseId === null) {
       this.timerBlurClose = setTimeout(() => {
         this.close();
       }, 0);
@@ -401,7 +418,10 @@ class AutoComplete extends Component {
       menuProps,
       listStyle,
       targetOrigin,
+      onBlur, // eslint-disable-line no-unused-vars
       onClose, // eslint-disable-line no-unused-vars
+      onFocus, // eslint-disable-line no-unused-vars
+      onKeyDown, // eslint-disable-line no-unused-vars
       onNewRequest, // eslint-disable-line no-unused-vars
       onUpdateInput, // eslint-disable-line no-unused-vars
       openOnFocus, // eslint-disable-line no-unused-vars
@@ -451,7 +471,7 @@ class AutoComplete extends Component {
             if (!this.props.filter(searchText, itemText, item)) break;
 
             const itemValue = item[this.props.dataSourceConfig.value];
-            if (itemValue.type && (itemValue.type.muiName === MenuItem.muiName ||
+            if (itemValue && itemValue.type && (itemValue.type.muiName === MenuItem.muiName ||
                itemValue.type.muiName === Divider.muiName)) {
               requestsList.push({
                 text: itemText,
@@ -486,16 +506,16 @@ class AutoComplete extends Component {
 
     const menu = open && requestsList.length > 0 && (
       <Menu
-        {...menuProps}
         ref="menu"
         autoWidth={false}
         disableAutoFocus={focusTextField}
         onEscKeyDown={this.handleEscKeyDown}
         initiallyKeyboardFocused={true}
-        onItemTouchTap={this.handleItemTouchTap}
+        onItemClick={this.handleItemClick}
         onMouseDown={this.handleMouseDown}
         style={Object.assign(styles.menu, menuStyle)}
         listStyle={Object.assign(styles.list, listStyle)}
+        {...menuProps}
       >
         {requestsList.map((i) => i.value)}
       </Menu>
@@ -504,11 +524,8 @@ class AutoComplete extends Component {
     return (
       <div style={prepareStyles(Object.assign(styles.root, style))} >
         <TextField
-          {...other}
           ref="searchTextField"
           autoComplete="off"
-          value={searchText}
-          onChange={this.handleChange}
           onBlur={this.handleBlur}
           onFocus={this.handleFocus}
           onKeyDown={this.handleKeyDown}
@@ -518,6 +535,11 @@ class AutoComplete extends Component {
           multiLine={false}
           errorStyle={errorStyle}
           style={textFieldStyle}
+          {...other}
+          // value and onChange are idiomatic properties often leaked.
+          // We prevent their overrides in order to reduce potential bugs.
+          value={searchText}
+          onChange={this.handleChange}
         />
         <Popover
           style={Object.assign({}, styles.popover, popoverStyle)}

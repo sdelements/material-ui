@@ -100,6 +100,7 @@ export default function getMuiTheme(muiTheme, ...more) {
       selectColor: palette.primary2Color,
       selectTextColor: palette.alternateTextColor,
       calendarYearBackgroundColor: palette.canvasColor,
+      headerColor: palette.pickerHeaderColor || palette.primary1Color,
     },
     dialog: {
       titleFontSize: 22,
@@ -326,6 +327,7 @@ export default function getMuiTheme(muiTheme, ...more) {
     tooltip: {
       color: white,
       rippleBackgroundColor: grey700,
+      opacity: 0.9,
     },
   }, muiTheme, {
     baseTheme, // To provide backward compatibility.

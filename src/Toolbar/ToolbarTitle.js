@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 function getStyles(props, context) {
   const {
@@ -35,7 +36,7 @@ class ToolbarTitle extends Component {
     /**
      * The text to be displayed.
      */
-    text: PropTypes.string,
+    text: PropTypes.node,
   };
 
   static contextTypes = {
@@ -44,7 +45,6 @@ class ToolbarTitle extends Component {
 
   render() {
     const {
-      className,
       style,
       text,
       ...other
@@ -54,7 +54,10 @@ class ToolbarTitle extends Component {
     const styles = getStyles(this.props, this.context);
 
     return (
-      <span {...other} className={className} style={prepareStyles(Object.assign({}, styles.root, style))}>
+      <span
+        style={prepareStyles(Object.assign({}, styles.root, style))}
+        {...other}
+      >
         {text}
       </span>
     );

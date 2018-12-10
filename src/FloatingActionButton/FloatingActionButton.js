@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import transitions from '../styles/transitions';
 import {fade} from '../utils/colorManipulator';
 import EnhancedButton from '../internal/EnhancedButton';
@@ -107,6 +108,12 @@ class FloatingActionButton extends Component {
      * If true, the button will be a small floating action button.
      */
     mini: PropTypes.bool,
+    /**
+     * Callback function fired when the button is clicked.
+     *
+     * @param {object} event Click event targeting the button.
+     */
+    onClick: PropTypes.func,
     /** @ignore */
     onMouseDown: PropTypes.func,
     /** @ignore */
@@ -246,6 +253,7 @@ class FloatingActionButton extends Component {
       className,
       children: childrenProp,
       disabled,
+      disabledColor, // eslint-disable-line no-unused-vars
       mini,
       secondary, // eslint-disable-line no-unused-vars
       iconStyle,

@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import transitions from '../styles/transitions';
 import withWidth, {SMALL} from '../utils/withWidth';
 import FlatButton from '../FlatButton';
@@ -23,6 +24,7 @@ function getStyles(props, context) {
         textColor,
         actionColor,
       },
+      borderRadius,
     },
   } = context;
 
@@ -35,7 +37,7 @@ function getStyles(props, context) {
       padding: `0 ${desktopGutter}px`,
       height: desktopSubheaderHeight,
       lineHeight: `${desktopSubheaderHeight}px`,
-      borderRadius: isSmall ? 0 : 2,
+      borderRadius: isSmall ? 0 : borderRadius,
       maxWidth: isSmall ? 'inherit' : 568,
       minWidth: isSmall ? 'inherit' : 288,
       width: isSmall ? `calc(100vw - ${desktopGutter * 2}px)` : 'auto',
@@ -68,7 +70,7 @@ export const SnackbarBody = (props, context) => {
     contentStyle,
     message,
     open, // eslint-disable-line no-unused-vars
-    onActionTouchTap,
+    onActionClick,
     style,
     ...other
   } = props;
@@ -80,7 +82,7 @@ export const SnackbarBody = (props, context) => {
     <FlatButton
       style={styles.action}
       label={action}
-      onTouchTap={onActionTouchTap}
+      onClick={onActionClick}
     />
   );
 
@@ -112,11 +114,11 @@ SnackbarBody.propTypes = {
    */
   message: PropTypes.node.isRequired,
   /**
-   * Fired when the action button is touchtapped.
+   * Fired when the action button is clicked.
    *
    * @param {object} event Action button event.
    */
-  onActionTouchTap: PropTypes.func,
+  onActionClick: PropTypes.func,
   /**
    * @ignore
    * Controls whether the `Snackbar` is opened or not.

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import transitions from '../styles/transitions';
 import EnhancedSwitch from '../internal/EnhancedSwitch';
 import RadioButtonOff from '../svg-icons/toggle/radio-button-unchecked';
@@ -172,14 +173,12 @@ class RadioButton extends Component {
     const uncheckedElement = React.isValidElement(uncheckedIcon) ?
       React.cloneElement(uncheckedIcon, {
         style: Object.assign(uncheckedStyles, uncheckedIcon.props.style),
-      }) :
-        <RadioButtonOff style={uncheckedStyles} />;
+      }) : <RadioButtonOff style={uncheckedStyles} />;
 
     const checkedElement = React.isValidElement(checkedIcon) ?
       React.cloneElement(checkedIcon, {
         style: Object.assign(checkedStyles, checkedIcon.props.style),
-      }) :
-        <RadioButtonOn style={checkedStyles} />;
+      }) : <RadioButtonOn style={checkedStyles} />;
 
     const mergedIconStyle = Object.assign(styles.icon, iconStyle);
     const mergedLabelStyle = Object.assign(styles.label, labelStyle);

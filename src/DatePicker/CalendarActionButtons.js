@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import FlatButton from '../FlatButton';
 
 class CalendarActionButton extends Component {
@@ -6,8 +7,8 @@ class CalendarActionButton extends Component {
     autoOk: PropTypes.bool,
     cancelLabel: PropTypes.node,
     okLabel: PropTypes.node,
-    onTouchTapCancel: PropTypes.func,
-    onTouchTapOk: PropTypes.func,
+    onClickCancel: PropTypes.func,
+    onClickOk: PropTypes.func,
   };
 
   static defaultProps = {
@@ -50,6 +51,7 @@ class CalendarActionButton extends Component {
           className={cancelClassName}
           label={wordings ? wordings.cancel : cancelLabel}
           onTouchTap={this.props.onTouchTapCancel}
+          onClick={this.props.onClickCancel}
           primary={true}
           style={{...styles.flatButtons, ...cancelStyle}}
         />
@@ -58,7 +60,7 @@ class CalendarActionButton extends Component {
             className={okClassName}
             disabled={this.refs.calendar !== undefined && this.refs.calendar.isSelectedDateDisabled()}
             label={okLabel}
-            onTouchTap={this.props.onTouchTapOk}
+            onClick={this.props.onClickOk}
             primary={true}
             style={{...styles.flatButtons, ...okStyle}}
           />

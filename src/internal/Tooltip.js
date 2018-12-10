@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import transitions from '../styles/transitions';
 
 function getStyles(props, context, state) {
@@ -13,6 +14,7 @@ function getStyles(props, context, state) {
     baseTheme,
     zIndex,
     tooltip,
+    borderRadius,
   } = context.muiTheme;
 
   const styles = {
@@ -26,7 +28,7 @@ function getStyles(props, context, state) {
       color: tooltip.color,
       overflow: 'hidden',
       top: -10000,
-      borderRadius: 2,
+      borderRadius,
       userSelect: 'none',
       opacity: 0,
       right: horizontalPosition === 'left' ? 12 : null,
@@ -56,7 +58,7 @@ function getStyles(props, context, state) {
     rootWhenShown: {
       top: verticalPosition === 'top' ?
         touchOffsetTop : 36,
-      opacity: 0.9,
+      opacity: tooltip.opacity,
       transform: `translate(0px, ${offset}px)`,
       transition: `${transitions.easeOut('0ms', 'top', '0ms')}, ${
         transitions.easeOut('450ms', 'transform', '0ms')}, ${
