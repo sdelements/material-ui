@@ -140,6 +140,14 @@ class Popover extends Component {
 
   componentDidMount() {
     this.placementTimeout = setTimeout(this.setPlacement);
+
+    if (this.props.open) {
+      setTimeout(() => {
+        this.setState({
+          setPlacement: true,
+        })
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -154,6 +162,13 @@ class Popover extends Component {
       this.setState({
         open: true,
         closing: false,
+        setPlacement: false,
+      }, () => {
+        setTimeout(() => {
+          this.setState({
+            setPlacement: true,
+          })
+        })
       });
     } else {
       if (nextProps.animated) {
@@ -213,7 +228,10 @@ class Popover extends Component {
       ...other
     } = this.props;
 
-    let styleRoot = style;
+    let styleRoot = {
+      ...style,
+      opacity: this.state.setPlacement ? 1 : 0,
+    };
 
     if (!animated) {
       styleRoot = {
