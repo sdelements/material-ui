@@ -87,7 +87,7 @@ class Tabs extends Component {
 
   state = {selectedIndex: 0};
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const valueLink = this.getValueLink(this.props);
     const initialIndex = this.props.initialSelectedIndex;
 
@@ -100,7 +100,7 @@ class Tabs extends Component {
     });
   }
 
-  componentWillReceiveProps(newProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(newProps, nextContext) {
     const valueLink = this.getValueLink(newProps);
     const newState = {
       muiTheme: nextContext.muiTheme || this.context.muiTheme,

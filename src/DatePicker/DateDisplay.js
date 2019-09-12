@@ -83,13 +83,13 @@ class DateDisplay extends Component {
     transitionDirection: 'up',
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (!this.props.monthDaySelected) {
       this.setState({selectedYear: true});
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.selectedDate !== this.props.selectedDate) {
       const direction = nextProps.selectedDate > this.props.selectedDate ? 'up' : 'down';
       this.setState({

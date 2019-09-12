@@ -84,7 +84,7 @@ class EnhancedButton extends Component {
     isKeyboardFocused: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {disabled, disableKeyboardFocus, keyboardFocused} = this.props;
     if (!disabled && keyboardFocused && !disableKeyboardFocus) {
       this.setState({isKeyboardFocused: true});
@@ -100,7 +100,7 @@ class EnhancedButton extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if ((nextProps.disabled || nextProps.disableKeyboardFocus) &&
       this.state.isKeyboardFocused) {
       this.setState({isKeyboardFocused: false});

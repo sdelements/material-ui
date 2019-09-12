@@ -104,7 +104,7 @@ class Drawer extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.maybeSwiping = false;
     this.touchStartX = null;
     this.touchStartY = null;
@@ -120,7 +120,7 @@ class Drawer extends Component {
     this.enableSwipeHandling();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If controlled then the open prop takes precedence.
     if (nextProps.open !== null) {
       this.setState({

@@ -157,7 +157,7 @@ class FloatingActionButton extends Component {
     zDepth: undefined,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       zDepth: this.props.disabled ? 0 : this.props.zDepth,
     });
@@ -170,7 +170,7 @@ class FloatingActionButton extends Component {
       'icons to FloatingActionButtons.');
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = {};
 
     if (nextProps.disabled !== this.props.disabled) {

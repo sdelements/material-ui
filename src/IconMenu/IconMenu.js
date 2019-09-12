@@ -156,7 +156,7 @@ class IconMenu extends Component {
     open: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.open != null) {
       this.setState({
         open: nextProps.open,

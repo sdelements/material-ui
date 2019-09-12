@@ -64,13 +64,13 @@ class ClockPointer extends Component {
     inner: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       inner: isInner(this.props),
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       inner: isInner(nextProps),
     });

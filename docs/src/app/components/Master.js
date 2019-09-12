@@ -36,7 +36,7 @@ class Master extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       muiTheme: getMuiTheme(),
     });
@@ -48,7 +48,7 @@ class Master extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     const newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
     this.setState({
       muiTheme: newMuiTheme,

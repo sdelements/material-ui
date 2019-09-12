@@ -139,7 +139,7 @@ class IconButton extends Component {
     tooltipShown: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.disabled) {
       this.setState({hovered: false});
     }

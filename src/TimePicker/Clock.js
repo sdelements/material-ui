@@ -26,7 +26,7 @@ class Clock extends Component {
     mode: 'hour',
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const selectedTime = this.props.initialTime || new Date();
     const minutes = selectedTime.getMinutes();
     selectedTime.setMinutes(minutes - (minutes % this.props.minutesStep));

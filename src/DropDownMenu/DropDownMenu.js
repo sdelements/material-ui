@@ -245,7 +245,7 @@ class DropDownMenu extends Component {
     }
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     if (this.props.autoWidth) {
       this.setWidth();
     }

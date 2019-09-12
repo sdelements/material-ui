@@ -108,7 +108,7 @@ class Snackbar extends Component {
     TIMEOUT: 'timeout'
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       open: this.props.open,
       message: this.props.message,
@@ -123,7 +123,7 @@ class Snackbar extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.open && nextProps.open &&
         (nextProps.message !== this.props.message || nextProps.action !== this.props.action)) {
       this.setState({

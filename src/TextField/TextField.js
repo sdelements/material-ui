@@ -263,7 +263,7 @@ class TextField extends Component {
     hasValue: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {
       children,
       name,
@@ -287,7 +287,7 @@ class TextField extends Component {
     this.uniqueId = uniqueId.replace(/[^A-Za-z0-9-]/gi, '');
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.disabled && !this.props.disabled) {
       this.setState({
         isFocused: false,

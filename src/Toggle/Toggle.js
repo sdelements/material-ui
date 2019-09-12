@@ -195,7 +195,7 @@ class Toggle extends Component {
     switched: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {toggled, defaultToggled, valueLink} = this.props;
 
     if (toggled || defaultToggled || (valueLink && valueLink.value)) {

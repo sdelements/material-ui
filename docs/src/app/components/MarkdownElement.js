@@ -23,7 +23,7 @@ class MarkdownElement extends Component {
     text: '',
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     marked.setOptions({
       gfm: true,
       tables: true,

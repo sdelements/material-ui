@@ -42,12 +42,12 @@ class GranularControlStepper extends React.Component {
     visited: [],
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {stepIndex, visited} = this.state;
     this.setState({visited: visited.concat(stepIndex)});
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  UNSAFE_componentWillUpdate(nextProps, nextState) {
     const {stepIndex, visited} = nextState;
     if (visited.indexOf(stepIndex) === -1) {
       this.setState({visited: visited.concat(stepIndex)});

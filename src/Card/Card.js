@@ -56,13 +56,13 @@ class Card extends Component {
     expanded: null,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       expanded: this.props.expanded === null ? this.props.initiallyExpanded === true : this.props.expanded,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // update the state when the component is controlled.
     if (nextProps.expanded !== null)
       this.setState({expanded: nextProps.expanded});

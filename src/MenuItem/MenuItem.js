@@ -174,7 +174,7 @@ class MenuItem extends Component {
     this.applyFocusState();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.open && nextProps.focusState === 'none') {
       this.handleRequestClose();
     }

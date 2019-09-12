@@ -61,7 +61,7 @@ class RadioButtonGroup extends Component {
     selected: '',
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let cnt = 0;
     let selected = '';
     const {valueSelected, defaultSelected} = this.props;
@@ -81,7 +81,7 @@ class RadioButtonGroup extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.hasOwnProperty('valueSelected')) {
       this.setState({
         selected: nextProps.valueSelected,

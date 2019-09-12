@@ -188,13 +188,13 @@ class DatePicker extends Component {
     date: undefined,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       date: this.isControlled() ? this.getControlledDate() : this.props.defaultDate,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.isControlled()) {
       const newDate = this.getControlledDate(nextProps);
       if (!isEqualDate(this.state.date, newDate)) {

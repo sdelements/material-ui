@@ -110,7 +110,7 @@ class Tooltip extends Component {
     this.setTooltipPosition();
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.setTooltipPosition();
   }
 

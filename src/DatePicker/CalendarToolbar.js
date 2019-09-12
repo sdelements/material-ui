@@ -47,7 +47,7 @@ class CalendarToolbar extends Component {
     transitionDirection: 'up',
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.displayDate !== this.props.displayDate) {
       const nextDirection = this.context.muiTheme.isRtl ? 'right' : 'left';
       const prevDirection = this.context.muiTheme.isRtl ? 'left' : 'right';

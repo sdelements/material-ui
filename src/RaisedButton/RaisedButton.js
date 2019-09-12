@@ -256,7 +256,7 @@ class RaisedButton extends Component {
     zDepth: 0,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const zDepth = this.props.disabled ? 0 : 1;
     this.setState({
       zDepth: zDepth,
@@ -264,7 +264,7 @@ class RaisedButton extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const zDepth = nextProps.disabled ? 0 : 1;
     const nextState = {
       zDepth: zDepth,

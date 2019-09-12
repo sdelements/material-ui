@@ -127,7 +127,7 @@ class Checkbox extends Component {
     switched: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {checked, defaultChecked, valueLink} = this.props;
 
     if (checked || defaultChecked || (valueLink && valueLink.value)) {
@@ -137,7 +137,7 @@ class Checkbox extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.checked !== nextProps.checked) {
       this.setState({
         switched: nextProps.checked,

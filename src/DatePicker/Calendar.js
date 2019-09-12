@@ -63,7 +63,7 @@ class Calendar extends Component {
     transitionEnter: true,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       displayDate: this.props.utils.getFirstDayOfMonth(this.props.initialDate),
       selectedDate: this.props.initialDate,
@@ -71,7 +71,7 @@ class Calendar extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.initialDate !== this.props.initialDate) {
       const date = nextProps.initialDate || new Date();
       this.setState({

@@ -198,7 +198,7 @@ class Menu extends Component {
     this.setScollPosition();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let selectedIndex;
     const filteredChildren = this.getFilteredChildren(nextProps.children);
 

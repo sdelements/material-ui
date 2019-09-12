@@ -25,7 +25,7 @@ class TimeDisplay extends Component {
     transitionDirection: 'up',
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.selectedTime !== this.props.selectedTime) {
       const direction = nextProps.selectedTime > this.props.selectedTime ? 'up' : 'down';
 

@@ -14,7 +14,7 @@ function wrapState(ComposedComponent) {
       defaultValue: PropTypes.number.isRequired,
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.setState({
         selectedIndex: this.props.defaultValue,
       });

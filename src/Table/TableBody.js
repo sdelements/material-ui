@@ -125,7 +125,7 @@ class TableBody extends Component {
     selectedRows: [],
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.preScanRows) {
       this.setState({
         selectedRows: this.getSelectedRows(this.props),
@@ -141,7 +141,7 @@ class TableBody extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.allRowsSelected !== nextProps.allRowsSelected) {
       if (!nextProps.allRowsSelected) {
         this.setState({

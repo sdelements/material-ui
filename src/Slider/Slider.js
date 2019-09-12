@@ -381,7 +381,7 @@ class Slider extends Component {
     value: 0,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {
       defaultValue,
       min,
@@ -401,7 +401,7 @@ class Slider extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.value !== undefined && !this.state.dragging) {
       const {
         min = this.props.min,

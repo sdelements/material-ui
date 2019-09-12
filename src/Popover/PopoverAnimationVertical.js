@@ -53,7 +53,7 @@ class PopoverAnimationVertical extends Component {
     this.setState({open: true}); // eslint-disable-line react/no-did-mount-set-state
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       open: nextProps.open,
     });

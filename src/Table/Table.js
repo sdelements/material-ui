@@ -143,13 +143,13 @@ class Table extends Component {
     allRowsSelected: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.allRowsSelected) {
       this.setState({allRowsSelected: true});
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.allRowsSelected !== nextProps.allRowsSelected) {
       this.setState({allRowsSelected: nextProps.allRowsSelected});
     }

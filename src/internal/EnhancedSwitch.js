@@ -111,8 +111,8 @@ class EnhancedSwitch extends Component {
     isKeyboardFocused: false,
   };
 
-  componentWillMount() {
-    this.componentWillReceiveProps(this.props);
+  UNSAFE_componentWillMount() {
+    this.UNSAFE_componentWillReceiveProps(this.props);
   }
 
   componentDidMount() {
@@ -123,7 +123,7 @@ class EnhancedSwitch extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const hasCheckedProp = nextProps.hasOwnProperty('checked');
     const hasNewDefaultProp =
       (nextProps.hasOwnProperty('defaultChecked') &&

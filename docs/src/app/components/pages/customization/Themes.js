@@ -53,7 +53,7 @@ class ThemesPage extends Component {
     drawerOpen: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       valueTabs: this.props.muiTheme.name || 'light',
     });

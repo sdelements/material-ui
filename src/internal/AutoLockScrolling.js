@@ -15,7 +15,7 @@ class AutoLockScrolling extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.lock !== nextProps.lock) {
       if (nextProps.lock) {
         this.preventScrolling();

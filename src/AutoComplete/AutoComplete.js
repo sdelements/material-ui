@@ -213,7 +213,7 @@ class AutoComplete extends Component {
     searchText: undefined,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.requestsList = [];
     this.setState({
       open: this.props.open,
@@ -222,7 +222,7 @@ class AutoComplete extends Component {
     this.timerClickCloseId = null;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.searchText !== nextProps.searchText) {
       this.setState({
         searchText: nextProps.searchText,
