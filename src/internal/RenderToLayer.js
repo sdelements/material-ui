@@ -25,6 +25,7 @@ class RenderToLayer extends Component {
     super(props, context);
     this.layer = document.createElement('div');
     if (props.useLayerForClickAway) {
+      this.eventNode = this.layer;
       this.layer.style.display = 'none';
       this.layer.style.position = 'fixed';
       this.layer.style.top = 0;
@@ -32,15 +33,35 @@ class RenderToLayer extends Component {
       this.layer.style.left = 0;
       this.layer.style.right = 0;
       this.layer.style.zIndex = context.muiTheme.zIndex.layer;
+    } else {
+      this.eventNode = window;
     }
     document.body.appendChild(this.layer);
   }
 
-  componentWillUnmount() {
-    if (!this.layer) {
+  componentDidMount() {
+    const {open} = this.props;
+
+    if (open) {
+      this.showLayer();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const {open} = this.props;
+
+    if (open === prevProps.open) {
       return;
     }
 
+    if (open) {
+      this.showLayer();
+    } else {
+      this.hideLayer();
+    }
+  }
+
+  componentWillUnmount() {
     this.hideLayer();
 
     unmountComponentAtNode(this.layer);
@@ -74,25 +95,20 @@ class RenderToLayer extends Component {
 
   showLayer() {
     if (this.props.useLayerForClickAway) {
-      this.layer.addEventListener('click', this.onClickAway);
-    } else {
-      setTimeout(() => {
-        window.addEventListener('click', this.onClickAway);
-      }, 0);
+      this.layer.style.display = 'block';
     }
 
-    this.layer.style.display = 'block';
+    setTimeout(() => {
+      this.eventNode.addEventListener('click', this.onClickAway);
+    }, 0);
   }
 
   hideLayer() {
     if (this.props.useLayerForClickAway) {
-      this.layer.style.position = 'relative';
-      this.layer.removeEventListener('click', this.onClickAway);
-    } else {
-      window.removeEventListener('click', this.onClickAway);
+      this.layer.style.display = 'none';
     }
 
-    this.layer.style.display = 'none';
+    this.eventNode.removeEventListener('click', this.onClickAway);
   }
 
   render() {
@@ -101,17 +117,7 @@ class RenderToLayer extends Component {
       render,
     } = this.props;
 
-    let contents;
-
-    if (open) {
-      contents = render();
-      this.showLayer();
-    } else {
-      contents = null;
-      this.hideLayer();
-    }
-
-    return createPortal(contents, this.layer);
+    return createPortal(open ? render() : null, this.layer);
   }
 }
 
