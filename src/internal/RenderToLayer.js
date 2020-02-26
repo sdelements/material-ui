@@ -32,7 +32,7 @@ class RenderToLayer extends Component {
       this.layer.style.bottom = 0;
       this.layer.style.left = 0;
       this.layer.style.right = 0;
-      this.layer.style.zIndex = context.muiTheme.zIndex.layer;
+      this.layer.style.zIndex = '';
     } else {
       this.eventNode = window;
     }
@@ -96,6 +96,7 @@ class RenderToLayer extends Component {
   showLayer() {
     if (this.props.useLayerForClickAway) {
       this.layer.style.display = 'block';
+      this.layer.style.zIndex = this.context.muiTheme.zIndex.layer;
     }
 
     setTimeout(() => {
@@ -106,6 +107,7 @@ class RenderToLayer extends Component {
   hideLayer() {
     if (this.props.useLayerForClickAway) {
       this.layer.style.display = 'none';
+      this.layer.style.zIndex = '';
     }
 
     this.eventNode.removeEventListener('click', this.onClickAway);
