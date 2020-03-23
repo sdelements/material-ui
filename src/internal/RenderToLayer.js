@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {unstable_renderSubtreeIntoContainer, unmountComponentAtNode} from 'react-dom';
+import {createPortal, unmountComponentAtNode} from 'react-dom';
 
 import Dom from '../utils/dom';
 
@@ -21,16 +21,52 @@ class RenderToLayer extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
-  componentDidMount() {
-    this.renderLayer();
+  constructor(props, context) {
+    super(props, context);
+    this.layer = document.createElement('div');
+    if (props.useLayerForClickAway) {
+      this.eventNode = this.layer;
+      this.layer.style.display = 'none';
+      this.layer.style.position = 'fixed';
+      this.layer.style.top = 0;
+      this.layer.style.bottom = 0;
+      this.layer.style.left = 0;
+      this.layer.style.right = 0;
+      this.layer.style.zIndex = '';
+    } else {
+      this.eventNode = window;
+    }
+    document.body.appendChild(this.layer);
   }
 
-  componentDidUpdate() {
-    this.renderLayer();
+  componentDidMount() {
+    const {open} = this.props;
+
+    if (open) {
+      this.showLayer();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const {open} = this.props;
+
+    if (open === prevProps.open) {
+      return;
+    }
+
+    if (open) {
+      this.showLayer();
+    } else {
+      this.hideLayer();
+    }
   }
 
   componentWillUnmount() {
-    this.unrenderLayer();
+    this.hideLayer();
+
+    unmountComponentAtNode(this.layer);
+    document.body.removeChild(this.layer);
+    this.layer = null;
   }
 
   onClickAway = (event) => {
@@ -57,64 +93,33 @@ class RenderToLayer extends Component {
     return this.layer;
   }
 
-  unrenderLayer() {
-    if (!this.layer) {
-      return;
-    }
-
+  showLayer() {
     if (this.props.useLayerForClickAway) {
-      this.layer.style.position = 'relative';
-      this.layer.removeEventListener('click', this.onClickAway);
-    } else {
-      window.removeEventListener('click', this.onClickAway);
+      this.layer.style.display = 'block';
+      this.layer.style.zIndex = this.context.muiTheme.zIndex.layer;
     }
 
-    unmountComponentAtNode(this.layer);
-    document.body.removeChild(this.layer);
-    this.layer = null;
+    setTimeout(() => {
+      this.eventNode.addEventListener('click', this.onClickAway);
+    }, 0);
   }
 
-  /**
-   * By calling this method in componentDidMount() and
-   * componentDidUpdate(), you're effectively creating a "wormhole" that
-   * funnels React's hierarchical updates through to a DOM node on an
-   * entirely different part of the page.
-   */
-  renderLayer() {
+  hideLayer() {
+    if (this.props.useLayerForClickAway) {
+      this.layer.style.display = 'none';
+      this.layer.style.zIndex = '';
+    }
+
+    this.eventNode.removeEventListener('click', this.onClickAway);
+  }
+
+  render() {
     const {
       open,
       render,
     } = this.props;
 
-    if (open) {
-      if (!this.layer) {
-        this.layer = document.createElement('div');
-        document.body.appendChild(this.layer);
-
-        if (this.props.useLayerForClickAway) {
-          this.layer.addEventListener('click', this.onClickAway);
-          this.layer.style.position = 'fixed';
-          this.layer.style.top = 0;
-          this.layer.style.bottom = 0;
-          this.layer.style.left = 0;
-          this.layer.style.right = 0;
-          this.layer.style.zIndex = this.context.muiTheme.zIndex.layer;
-        } else {
-          setTimeout(() => {
-            window.addEventListener('click', this.onClickAway);
-          }, 0);
-        }
-      }
-
-      const layerElement = render();
-      this.layerElement = unstable_renderSubtreeIntoContainer(this, layerElement, this.layer);
-    } else {
-      this.unrenderLayer();
-    }
-  }
-
-  render() {
-    return null;
+    return createPortal(open ? render() : null, this.layer);
   }
 }
 
