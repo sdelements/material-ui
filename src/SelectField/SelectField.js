@@ -236,6 +236,7 @@ class SelectField extends Component {
         underlineFocusStyle={underlineFocusStyle}
       >
         <DropDownMenu
+          aria-labelledBy={id}
           disabled={disabled}
           style={Object.assign(styles.dropDownMenu, menuStyle)}
           labelStyle={Object.assign(styles.label, labelStyle)}
