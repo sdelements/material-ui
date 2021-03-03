@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EventListener from 'react-event-listener';
 import keycode from 'keycode';
+import uniqueId from 'lodash.uniqueid';
 import transitions from '../styles/transitions';
 import FocusRipple from './FocusRipple';
 import TouchRipple from './TouchRipple';
@@ -297,8 +298,12 @@ class EnhancedSwitch extends Component {
       wrapStyles.marginRight /= 2;
     }
 
+    const id = other.id || uniqueId(name);
+
     const labelElement = label && (
-      <label style={prepareStyles(Object.assign(styles.label, labelStyle))}>
+      <label
+        htmlFor={id}
+        style={prepareStyles(Object.assign(styles.label, labelStyle))}>
         {label}
       </label>
     );
@@ -343,6 +348,7 @@ class EnhancedSwitch extends Component {
     const inputElement = (
       <input
         {...other}
+        id={id}
         ref="checkbox"
         type={inputType}
         style={prepareStyles(Object.assign(styles.input, inputStyle))}
